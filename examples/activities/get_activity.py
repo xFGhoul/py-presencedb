@@ -5,9 +5,12 @@ from presencedb.enums import ActivityID
 
 client = Client()
 
+
 async def get_activity(id):
-    activity = await client.get_activity(id)
+    activity = await client.get_activity(id, should_format=True)
     print(activity.name)
+    print(activity.stats.top_users)
+
 
 loop = asyncio.new_event_loop()
-loop.run_until_complete(get_activity(ActivityID.genshin_impact))
+loop.run_until_complete(get_activity(ActivityID.SPOTIFY))
