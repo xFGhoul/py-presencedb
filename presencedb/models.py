@@ -1,14 +1,7 @@
-import humanize
-import datetime
-import aiohttp
-import asyncio
-
 from dataclasses import dataclass
-from typing import Dict, List
 
 from ._constants import API
-from .utils import humanize_duration
-
+from .utils import humanize_duration, HUMNANIZE_HOURS, HUMANIZE_DAYS
 
 class User:
     def __init__(self, user_info: dict, user_stats: dict, should_format: bool) -> None:
@@ -45,12 +38,12 @@ class UserStats:
         self.total_duration = (
             user_stats["totalDuration"]
             if not should_format
-            else humanize_duration(user_stats["totalDuration"], "days")
+            else humanize_duration(user_stats["totalDuration"], HUMANIZE_DAYS)
         )
         self.trending_duration = (
             user_stats["trendingDuration"]
             if not should_format
-            else humanize_duration(user_stats["trendingDuration"], "hours")
+            else humanize_duration(user_stats["trendingDuration"], HUMNANIZE_HOURS)
         )
         self.playtime_dates = [
             PlaytimeDate(**playtime_date)
@@ -77,12 +70,12 @@ class ActivityStats:
         self.total_duration = (
             activity_stats["totalDuration"]
             if not should_format
-            else humanize_duration(activity_stats["totalDuration"], "days")
+            else humanize_duration(activity_stats["totalDuration"], HUMANIZE_DAYS)
         )
         self.trending_duration = (
             activity_stats["trendingDuration"]
             if not should_format
-            else humanize_duration(activity_stats["trendingDuration"], "hours")
+            else humanize_duration(activity_stats["trendingDuration"], HUMNANIZE_HOURS)
         )
         self.top_users = [
             TopUser(**top_user) for top_user in activity_stats["topUsers"]
