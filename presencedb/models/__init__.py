@@ -10,12 +10,3 @@
 
  Made With ❤️ By Ghoul
 """
-
-from .presencedb import Client
-from .utils import icon_id_to_bytes, humanize_duration, HUMANIZE_DAYS, HUMNANIZE_HOURS
-from .errors import *
-from .enums import Activity
-
-__version__ = "0.0.2"
-__author__ = "Ghoul"
-__license__ = "MIT"

@@ -3,7 +3,7 @@ from distutils.core import setup
 setup(
     name="presencedb",  
     packages=["presencedb"],  
-    version="1.0",  #
+    version="0.0.2",
     license="MIT",  
     description="API wrapper for the presencedb (undocumented) api",  
     author="Ghoul",

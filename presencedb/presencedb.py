@@ -1,21 +1,43 @@
+"""
+                                                            _ _     
+                                                           | | |    
+  _ __  _   _   _ __  _ __ ___  ___  ___ _ __   ___ ___  __| | |__  
+ | '_ \| | | | | '_ \| '__/ _ \/ __|/ _ \ '_ \ / __/ _ \/ _` | '_ \ 
+ | |_) | |_| | | |_) | | |  __/\__ \  __/ | | | (_|  __/ (_| | |_) |
+ | .__/ \__, | | .__/|_|  \___||___/\___|_| |_|\___\___|\__,_|_.__/ 
+ | |     __/ | | |                                                  
+ |_|    |___/  |_|                                                  
+
+ Made With ❤️ By Ghoul
+"""
+
 import aiohttp
+import logging
 
 from typing import List
 
-from ._constants import API
-from .models import User, Activity, TopActivity, TrendingActivity
-from .errors import UserNotFound, ActivityNotFound, UnexpectedRequestError
+from .models.abc import TopActivity, TrendingActivity
+from .models.activity import Activity
+from .models.user import User
+
+from .constants import API
+from .errors import UserNotFound, ActivityNotFound, HTTPError
 
 
 class Client:
-    def __init__(self):
-        super().__init__()
-
+    def __init__(self, debug: bool = False):
+        self.debug = debug
+        self.logger = logging.getLogger(__file__)
+        
     async def _make_request(self, target: str) -> dict:
         async with aiohttp.ClientSession() as session:
             async with session.get(
                 f"{API.BASE_URL}/{target}", headers=API.HEADERS
             ) as response:
+                if response.status not in range(200, 299):
+                    raise HTTPError(f"Status Code Raised {response.status}")
+                if self.debug:
+                    self.logger.info(f"Sending HTTP /GET Request: {API.BASE_URL}/{target}")
                 json = await response.json()
                 return json
 
@@ -74,7 +96,7 @@ class Client:
             top_activities = [TopActivity(**activity) for activity in top_activity_info]
             return top_activities
         else:
-            raise UnexpectedRequestError("Could Not Fetch The Top Activities")
+            raise HTTPError("Could Not Fetch The Top Activities")
 
     async def get_trending_activities(self) -> List[TrendingActivity]:
         """Returns The Trending Activities
@@ -92,4 +114,4 @@ class Client:
             ]
             return trending_activities
         else:
-            raise UnexpectedRequestError("Could Not Fetch The Trending Activities")
+            HTTPError("Could Not Fetch The Trending Activities")

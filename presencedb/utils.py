@@ -1,9 +1,22 @@
+"""
+                                                            _ _     
+                                                           | | |    
+  _ __  _   _   _ __  _ __ ___  ___  ___ _ __   ___ ___  __| | |__  
+ | '_ \| | | | | '_ \| '__/ _ \/ __|/ _ \ '_ \ / __/ _ \/ _` | '_ \ 
+ | |_) | |_| | | |_) | | |  __/\__ \  __/ | | | (_|  __/ (_| | |_) |
+ | .__/ \__, | | .__/|_|  \___||___/\___|_| |_|\___\___|\__,_|_.__/ 
+ | |     __/ | | |                                                  
+ |_|    |___/  |_|                                                  
+
+ Made With ❤️ By Ghoul
+"""
+
 import io
 import aiohttp
 import humanize
 import datetime
 
-from typing import Union, Final
+from typing import Union, Optional, Final
 
 HUMNANIZE_HOURS: Final[str] = "hours"
 HUMANIZE_DAYS: Final[str] = "days"
@@ -16,9 +29,9 @@ async def icon_id_to_bytes(icon_id: str) -> io.BytesIO:
             return buffer
 
 
-def humanize_duration(number: int, type: Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]) -> int:
+def humanize_duration(number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]] = HUMNANIZE_HOURS) -> str:
     if type == HUMNANIZE_HOURS:
-        suppress = suppress = [
+        suppress = [
             "seconds",
             "minutes",
             "seconds",
@@ -27,7 +40,7 @@ def humanize_duration(number: int, type: Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]) 
             "months",
         ]
     elif type == HUMANIZE_DAYS:
-        suppress = suppress = [
+        suppress = [
             "seconds",
             "minutes",
             "seconds",

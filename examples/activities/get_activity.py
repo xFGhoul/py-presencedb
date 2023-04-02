@@ -1,7 +1,7 @@
 import asyncio
 
 from presencedb import Client
-from presencedb.enums import ActivityID
+from presencedb.enums import Activity
 
 client = Client()
 
@@ -13,4 +13,4 @@ async def get_activity(id):
 
 
 loop = asyncio.new_event_loop()
-loop.run_until_complete(get_activity(ActivityID.SPOTIFY))
+loop.run_until_complete(get_activity(Activity.SPOTIFY))
