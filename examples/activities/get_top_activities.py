@@ -6,15 +6,10 @@ from presencedb.utils import humanize_duration
 client = Client()
 
 
-async def get_top_activities(id):
+async def get_top_activities():
     activities = await client.get_top_activities()
-    print(
-        activities
-    )  # [TopActtivity(name=..., dId=..., duration=..., icon=...), TopActivity(name=..., dId=..., duration=..., icon=...)]
-    # OR
-    print(
-        f"{activities[0].name} : {humanize_duration(activities[0].duration)}"
-    )  # Spotify: x days
+    print(f"{activities[0].name} : {humanize_duration(activities[0].duration)}")
+    await client.cleanup()
 
 
 loop = asyncio.new_event_loop()

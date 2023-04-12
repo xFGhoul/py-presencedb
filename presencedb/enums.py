@@ -1,24 +1,12 @@
-"""
-                                                            _ _     
-                                                           | | |    
-  _ __  _   _   _ __  _ __ ___  ___  ___ _ __   ___ ___  __| | |__  
- | '_ \| | | | | '_ \| '__/ _ \/ __|/ _ \ '_ \ / __/ _ \/ _` | '_ \ 
- | |_) | |_| | | |_) | | |  __/\__ \  __/ | | | (_|  __/ (_| | |_) |
- | .__/ \__, | | .__/|_|  \___||___/\___|_| |_|\___\___|\__,_|_.__/ 
- | |     __/ | | |                                                  
- |_|    |___/  |_|                                                  
+from typing import Final, Tuple, final
 
- Made With ❤️ By Ghoul
-"""
-
-from typing import Final, final
-from enum import IntEnum
-
-__all__ = ("Activity")
+__all__: Tuple[str, ...] = ("ActivityID",)
 
 
 @final
-class Activity:
+class ActivityID:
+    """Class Representing Activity ID's"""
+
     SPOTIFY: Final[int] = 000000000000000000
     YOUTUBE: Final[int] = 463097721130188830
     VALORANT: Final[int] = 700136079562375258

@@ -1,0 +1,43 @@
+[tool.pdm]
+[tool.pdm.dev-dependencies]
+dev = ["rich", "asyncio", "pre-commit"]
+test = ["pytest", "pytest-asyncio"]
+docs = ["sphinx==4.4.0",
+    "sphinxcontrib-trio==1.1.2",
+    "sphinxcontrib-websupport>=1.2.4",
+    "typing-extensions>=4.5.0"
+    ]
+
+[tool.pdm.scripts]
+local = "python testing.py"
+tests = "pytest -m asyncio tests/"
+
+[project]
+name = "presencedb"
+version = "2.0.0"
+description = "A modern, feature rich, easy to use API wrapper for presencedb"
+authors = [
+    {name = "xFGhoul", email = ""},
+]
+dependencies = [
+    "aiohttp>=3.8.4",
+    "humanize>=4.6.0",
+    "yarl>=1.8.2",
+    "aiofile>=3.8.5",
+]
+requires-python = ">=3.11"
+license = {text = "MIT"}
+
+[tool.pytest.ini_options]
+pythonpath = [
+  "."
+]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+
+[tool.ruff]
+ignore = ["F403", "E501"]
+
+[tool.ruff.per-file-ignores]
+"docs/conf.py" = ["E402"]
+"docs/extensions/attributetable.py" = ["F402"]

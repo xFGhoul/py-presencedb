@@ -1,37 +1,57 @@
-"""
-                                                            _ _     
-                                                           | | |    
-  _ __  _   _   _ __  _ __ ___  ___  ___ _ __   ___ ___  __| | |__  
- | '_ \| | | | | '_ \| '__/ _ \/ __|/ _ \ '_ \ / __/ _ \/ _` | '_ \ 
- | |_) | |_| | | |_) | | |  __/\__ \  __/ | | | (_|  __/ (_| | |_) |
- | .__/ \__, | | .__/|_|  \___||___/\___|_| |_|\___\___|\__,_|_.__/ 
- | |     __/ | | |                                                  
- |_|    |___/  |_|                                                  
-
- Made With ❤️ By Ghoul
-"""
-
+import datetime
 import io
+from typing import Final, List, Optional, Tuple, Union
+
 import aiohttp
 import humanize
-import datetime
 
-from typing import Union, Optional, Final
+__all__: Tuple[str, ...] = (
+    "icon_to_bytes",
+    "humanize_duration",
+)
 
 HUMNANIZE_HOURS: Final[str] = "hours"
 HUMANIZE_DAYS: Final[str] = "days"
 
 
-async def icon_id_to_bytes(icon_id: str) -> io.BytesIO:
+async def icon_to_bytes(icon: str) -> io.BytesIO:
+    """Converts Icon URL To Bytes
+
+    Parameters
+    ----------
+    icon : :class:`str`
+        Icon URL
+
+    Returns
+    -------
+    io.BytesIO
+        Bytes Like Object Of Icon
+    """
     async with aiohttp.ClientSession() as session:
-        async with session.get(icon_id) as response:
+        async with session.get(icon) as response:
             buffer = io.BytesIO(await response.read())
             return buffer
 
 
-def humanize_duration(number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]] = HUMNANIZE_HOURS) -> str:
+def humanize_duration(
+    number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]] = HUMNANIZE_HOURS
+) -> str:
+    """Generates a Human Readable Duration
+
+    Parameters
+    ----------
+    number : int
+        Duration To Format
+    type : Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]], optional
+        If The Output Should Be Days or Hours, defaults to HUMNANIZE_HOURS
+
+    Returns
+    -------
+    str
+        Humanized Duration
+    """
     if type == HUMNANIZE_HOURS:
-        suppress = [
+        suppress: List[str] = [
             "seconds",
             "minutes",
             "seconds",
@@ -40,7 +60,7 @@ def humanize_duration(number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZ
             "months",
         ]
     elif type == HUMANIZE_DAYS:
-        suppress = [
+        suppress: List[str] = [
             "seconds",
             "minutes",
             "seconds",
@@ -49,7 +69,7 @@ def humanize_duration(number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZ
             "months",
         ]
 
-    duration = humanize.precisedelta(
+    duration: str = humanize.precisedelta(
         datetime.timedelta(seconds=number), suppress=suppress, format="%0.1f"
     )
     return duration

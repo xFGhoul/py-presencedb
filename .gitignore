@@ -128,5 +128,13 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
+# Ruff
+.ruff_cache/
+
+# Documentation
+docs/apidocs
+
 # Internal
 testing.py
+test-logs.log
+.pdm-python

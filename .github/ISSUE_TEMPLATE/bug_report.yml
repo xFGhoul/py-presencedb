@@ -1,5 +1,5 @@
 name: 🐛 Bug Report
-description: Create a report to help us improve py-presencedb 
+description: Create a report to help us improve py-presencedb
 title: 'Bug: '
 body:
   - type: checkboxes
