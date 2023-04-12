@@ -17,7 +17,7 @@ name = "presencedb"
 version = "2.0.0"
 description = "A modern, feature rich, easy to use API wrapper for presencedb"
 authors = [
-    {name = "xFGhoul", email = ""},
+    {name = "xFGhoul"},
 ]
 dependencies = [
     "aiohttp>=3.8.4",
