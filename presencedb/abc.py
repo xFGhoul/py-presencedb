@@ -101,9 +101,9 @@ class PlaytimeDate:
     ----------
     date: :class:`str`
         Date Activity Was Played On
-    seconds: :class:`int`
+    duration: :class:`int`
         Duration Activity Was Played For In Seconds
     """
 
     date: str
-    seconds: int
+    duration: int

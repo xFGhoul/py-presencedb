@@ -16,6 +16,8 @@ class Activity:
 
     Attributes
     ----------
+    id: class:`int`
+        Internal PresenceDB ID of Activity
     name: :class:`str`
         Name of Activity
     dId: :class:`int`
@@ -31,6 +33,7 @@ class Activity:
     """
 
     __slots__: Tuple[str, ...] = (
+        "id",
         "name",
         "dId",
         "added",
@@ -40,11 +43,12 @@ class Activity:
     )
 
     def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
-        self.name: str = data["name"]
-        self.dId: int = data["dId"]
-        self.added: str = data["added"]
-        self.icon: str = data["icon"]
-        self.color: str = data["color"]
+        self.id: int = data.get("id")
+        self.name: str = data.get("name")
+        self.dId: int = data.get("dId")
+        self.added: str = data.get("added")
+        self.icon: str = data.get("icon")
+        self.color: str = data.get("color")
         self.stats: ActivityStats = ActivityStats(stats, should_format)
 
         def __repr__(self):
@@ -80,18 +84,18 @@ class ActivityStats:
 
     def __init__(self, stats: Dict, should_format: bool) -> None:
         self.total_duration: str = (
-            stats["totalDuration"]
+            stats.get("totalDuration")
             if not should_format
-            else humanize_duration(stats["totalDuration"], HUMANIZE_DAYS)
+            else humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
         )
         self.trending_duration: str = (
-            stats["trendingDuration"]
+            stats.get("trendingDuration")
             if not should_format
-            else humanize_duration(stats["trendingDuration"], HUMNANIZE_HOURS)
+            else humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
         )
         self.top_users: List[TopUser] = [
-            TopUser(**top_user) for top_user in stats["topUsers"]
+            TopUser(**top_user) for top_user in stats.get("topUsers")
         ]
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date) for playtime_date in stats["playtimeDates"]
+            PlaytimeDate(**playtime_date) for playtime_date in stats.get("playtimeDates")
         ]

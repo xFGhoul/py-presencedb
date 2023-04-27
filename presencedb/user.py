@@ -31,8 +31,8 @@ class User:
         User's Name
     discriminator: :class:`str`
         User's Discord Discriminator
-    inactive: :class:`bool`
-        If the User is marked as Inactive
+    inactive: :class:`str`
+        Returns a Date of when The User Became Inactive
     added: :class:`str`
         Date User's Account Was Added
     color: :class:`str`
@@ -41,6 +41,8 @@ class User:
         Avatar ID of User
     plus: :class:`bool`
         If The User Has Subscribed To PresenceDB Plus
+    tracker: :class:`Dict`
+        Information about Current User Activity
     timestamp: :class:`str`
         Timestamp of Current Activity
     current_activities: List[CurrentActivity]
@@ -62,6 +64,7 @@ class User:
         "color",
         "avatar",
         "plus",
+        "tracker",
         "timestamp",
         "current_activities",
         "stats",
@@ -69,22 +72,23 @@ class User:
     )
 
     def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
-        self.id: int = data["id"]
-        self.dId: int = data["dId"]
-        self.name: str = data["name"]
-        self.discriminator: str = data["discriminator"]
-        self.inactive: bool = data["inactive"]
-        self.private: bool = data["private"]
-        self.added: str = data["added"]
-        self.color: str = data["color"]
-        self.avatar: str = data["avatar"]
-        self.plus: bool = data["plus"]
+        self.id: int = data.get("id")
+        self.dId: int = data.get("dId")
+        self.name: str = data.get("name")
+        self.discriminator: str = data.get("discriminator")
+        self.inactive: str = data.get("inactiveSince")
+        self.private: bool = data.get("private")
+        self.added: str = data.get("added")
+        self.color: str = data.get("color")
+        self.avatar: str = data.get("avatar")
+        self.plus: bool = data.get("plus")
+        self.tracker: Dict | None = data.get("tracker") 
         self.timestamp: str | None = (
-            data["tracker"]["timestamp"] if data["tracker"] else None
+            self.tracker.get("timestamp") if self.tracker else None
         )
         self.current_activities: CurrentActivity | None = (
-            [CurrentActivity(**activity) for activity in data["tracker"]["activities"]]
-            if data["tracker"]
+            [CurrentActivity(**activity) for activity in self.tracker.get("activities")]
+            if self.tracker
             else None
         )
         self.stats: UserStats = UserStats(stats, should_format)
@@ -152,30 +156,34 @@ class UserStats:
         "top_activities",
         "trending_activities",
         "avatar_history",
+        "records",
     )
 
     def __init__(self, stats: Dict, should_format) -> None:
         self.total_duration: str = (
-            stats["totalDuration"]
+            stats.get("totalDuration")
             if not should_format
-            else humanize_duration(stats["totalDuration"], HUMANIZE_DAYS)
+            else humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
         )
         self.trending_duration: str = (
-            stats["trendingDuration"]
+            stats.get("trendingDuration")
             if not should_format
-            else humanize_duration(stats["trendingDuration"], HUMNANIZE_HOURS)
+            else humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
         )
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date) for playtime_date in stats["playtimeDates"]
+            PlaytimeDate(**playtime_date) for playtime_date in stats.get("playtimeDates")
         ]
         self.top_activities: List[TopActivity] = [
-            TopActivity(**activity) for activity in stats["topActivities"]
+            TopActivity(**activity) for activity in stats.get("topActivities")
         ]
         self.trending_activities: List[TrendingActivity] = [
-            TrendingActivity(**activity) for activity in stats["trendingActivities"]
+            TrendingActivity(**activity) for activity in stats.get("trendingActivities")
         ]
         self.avatar_history: List[AvatarHistory] = [
-            AvatarHistory(**avatar) for avatar in stats["avatarHistory"]
+            AvatarHistory(**avatar) for avatar in stats.get("avatarHistory")
+        ]
+        self.records: List[Record] = [
+            Record(**record) for record in stats.get("records")
         ]
 
 
@@ -223,3 +231,50 @@ class AvatarHistory:
 
     def __post_init__(self):
         self.avatar = f"{API.AVATAR_BASE}/{self.dUserId}/{self.avatar}"
+
+@dataclass
+class ActivityRecord:
+    """Class Representing an Activity Record
+
+    Attributes
+    ----------
+    dId: :class:`str`
+        ID of Activity
+    name: :class:`str`
+        Activity Name
+    icon: :class:`str`
+        Activity Icon
+    """
+    dId: str
+    name: str
+    icon: str
+
+    def __post_init__(self):
+        self.icon = f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+
+@dataclass
+class Record:
+    """
+    Class Representing A User's Activity History
+
+    Attributes
+    ----------
+    id: :class:`int`
+        Internal ID of Record
+    date: :class:`str`
+        Date This Activity was Played
+    duration: :class:`int`
+        Duration of Activity Played
+    dActivityId: :class:`str`
+        ID of Activity Played
+    dUserId: :class:`str`
+        Discord ID of User Playing The Activity
+    Activity: :class:`dict`
+        Dict Of Information Referencing the Activity
+    """
+    id: int
+    date: str
+    duration: int
+    dActivityId: str
+    dUserId: str
+    Activity: ActivityRecord
