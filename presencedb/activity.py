@@ -97,5 +97,6 @@ class ActivityStats:
             TopUser(**top_user) for top_user in stats.get("topUsers")
         ]
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date) for playtime_date in stats.get("playtimeDates")
+            PlaytimeDate(**playtime_date)
+            for playtime_date in stats.get("playtimeDates")
         ]

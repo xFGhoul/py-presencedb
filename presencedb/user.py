@@ -82,7 +82,7 @@ class User:
         self.color: str = data.get("color")
         self.avatar: str = data.get("avatar")
         self.plus: bool = data.get("plus")
-        self.tracker: Dict | None = data.get("tracker") 
+        self.tracker: Dict | None = data.get("tracker")
         self.timestamp: str | None = (
             self.tracker.get("timestamp") if self.tracker else None
         )
@@ -171,7 +171,8 @@ class UserStats:
             else humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
         )
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date) for playtime_date in stats.get("playtimeDates")
+            PlaytimeDate(**playtime_date)
+            for playtime_date in stats.get("playtimeDates")
         ]
         self.top_activities: List[TopActivity] = [
             TopActivity(**activity) for activity in stats.get("topActivities")
@@ -232,6 +233,19 @@ class AvatarHistory:
     def __post_init__(self):
         self.avatar = f"{API.AVATAR_BASE}/{self.dUserId}/{self.avatar}"
 
+    async def save(self, path: os.PathLike) -> None:
+        """Saves Current Activity To File
+
+        Parameters
+        ----------
+        path : os.PathLike
+            Path To Save File Too
+        """
+        bytes: BytesIO = await icon_to_bytes(self.avatar)
+        async with async_open(path, "wb") as file:
+            await file.write(bytes.read())
+
+
 @dataclass
 class ActivityRecord:
     """Class Representing an Activity Record
@@ -245,12 +259,14 @@ class ActivityRecord:
     icon: :class:`str`
         Activity Icon
     """
+
     dId: str
     name: str
     icon: str
 
     def __post_init__(self):
         self.icon = f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+
 
 @dataclass
 class Record:
@@ -272,6 +288,7 @@ class Record:
     Activity: :class:`dict`
         Dict Of Information Referencing the Activity
     """
+
     id: int
     date: str
     duration: int

@@ -1,7 +1,14 @@
-from dataclasses import dataclass
-from typing import Tuple
+import os
 
+from aiofile import async_open
+from dataclasses import dataclass
+from typing import Tuple, TYPE_CHECKING
+
+from .utils import icon_to_bytes
 from .constants import API
+
+if TYPE_CHECKING:
+    from io import BytesIO
 
 __all__: Tuple[str, ...] = (
     "TopUser",
@@ -38,6 +45,18 @@ class TopUser:
 
     def __post_init__(self):
         self.avatar = f"{API.AVATAR_BASE}/{self.dId}/{self.avatar}"
+
+    async def save(self, path: os.PathLike) -> None:
+        """Saves Current Activity To File
+
+        Parameters
+        ----------
+        path : os.PathLike
+            Path To Save File Too
+        """
+        bytes: BytesIO = await icon_to_bytes(self.avatar)
+        async with async_open(path, "wb") as file:
+            await file.write(bytes.read())
 
 
 @dataclass
