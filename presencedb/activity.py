@@ -1,7 +1,6 @@
 from typing import Dict, List, Tuple
 
-from .abc import PlaytimeDate, TopUser
-from .constants import API
+from .abc import PlaytimeDate, TopUser, Avatar
 from .utils import HUMANIZE_DAYS, HUMNANIZE_HOURS, humanize_duration
 
 __all__: Tuple[str, ...] = (
@@ -24,8 +23,8 @@ class Activity:
         ID of Activity
     added: :class:`str`
         Date Activity Was Added
-    icon: :class:`str`
-        Avatar Icon ID
+    icon: :class:`Avatar`
+        Activity Icon
     color: :class:`str`
         Color of Activity
     stats: ActivityStats
@@ -47,23 +46,18 @@ class Activity:
         self.name: str = data.get("name")
         self.dId: int = data.get("dId")
         self.added: str = data.get("added")
-        self.icon: str = data.get("icon")
+        self.icon: Avatar = Avatar._from_activity(data.get("icon"), self.dId)
         self.color: str = data.get("color")
         self.stats: ActivityStats = ActivityStats(stats, should_format)
 
-        def __repr__(self):
-            return self.name
+        def __repr__(self) -> str:
+            return f"<Activity name={self.name}>"
 
-    @property
-    def icon_url(self) -> str:
-        """Get Icon URL of Activity
+        def __eq__(self, other) -> bool:
+            return self.id == other.id
 
-        Returns
-        -------
-        str
-            Icon URL
-        """
-        return f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+        def __hash__(self) -> int:
+            return hash(self.id)
 
 
 class ActivityStats:

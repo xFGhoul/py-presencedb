@@ -1,15 +1,8 @@
-import os
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Dict, List, Tuple
+from typing import Dict, List, Tuple
 
-from aiofile import async_open
-
-from .abc import PlaytimeDate, TopActivity, TrendingActivity
-from .constants import API
-from .utils import HUMANIZE_DAYS, HUMNANIZE_HOURS, humanize_duration, icon_to_bytes
-
-if TYPE_CHECKING:
-    from io import BytesIO
+from .abc import PlaytimeDate, TopActivity, TrendingActivity, Avatar
+from .utils import HUMANIZE_DAYS, HUMNANIZE_HOURS, humanize_duration
 
 __all__: Tuple[str, ...] = (
     "User",
@@ -37,8 +30,8 @@ class User:
         Date User's Account Was Added
     color: :class:`str`
         Color Of User's Account
-    avatar: :class:`str`
-        Avatar ID of User
+    avatar: :class:`Avatar`
+        User Avatar
     plus: :class:`bool`
         If The User Has Subscribed To PresenceDB Plus
     tracker: :class:`Dict`
@@ -80,7 +73,7 @@ class User:
         self.private: bool = data.get("private")
         self.added: str = data.get("added")
         self.color: str = data.get("color")
-        self.avatar: str = data.get("avatar")
+        self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.dId)
         self.plus: bool = data.get("plus")
         self.tracker: Dict | None = data.get("tracker")
         self.timestamp: str | None = (
@@ -95,36 +88,13 @@ class User:
         self.tag: str = self.name + f"#{self.discriminator}"
 
         def __repr__(self):
-            return self.tag
+            return f"<User tag={self.tag}>"
 
         def __eq__(self, other):
             return self.id == other.id
 
-        def __hash__(self):
-            return self.id
-
-    @property
-    def icon_url(self) -> str:
-        """Get Avatar URL of User
-
-        Returns
-        -------
-        str
-            Avatar URL
-        """
-        return f"{API.ICON_BASE}/{self.dId}/{self.icon}"
-
-    async def save_avatar(self, path: os.PathLike) -> None:
-        """Saves Current Activity To File
-
-        Parameters
-        ----------
-        path : os.PathLike
-            Path To Save File Too
-        """
-        bytes: BytesIO = await icon_to_bytes(self.icon_url)
-        async with async_open(path, "wb") as file:
-            await file.write(bytes.read())
+        def __hash__(self) -> int:
+            return hash(self.id)
 
 
 class UserStats:
@@ -216,8 +186,8 @@ class AvatarHistory:
         ID of Avatar
     dId: :class:`int`
         Discord ID Pertaining to Avatar
-    avatar: :class:`str`
-        Avatar URL
+    avatar: :class:`Avatar`
+        Avatar
     added: :class:`str`
         Date Avatar Was Added
     hidden: :class:`bool`
@@ -226,24 +196,12 @@ class AvatarHistory:
 
     id: int
     dUserId: int
-    avatar: str
+    avatar: Avatar
     added: str
     hidden: bool
 
     def __post_init__(self):
-        self.avatar = f"{API.AVATAR_BASE}/{self.dUserId}/{self.avatar}"
-
-    async def save(self, path: os.PathLike) -> None:
-        """Saves Current Activity To File
-
-        Parameters
-        ----------
-        path : os.PathLike
-            Path To Save File Too
-        """
-        bytes: BytesIO = await icon_to_bytes(self.avatar)
-        async with async_open(path, "wb") as file:
-            await file.write(bytes.read())
+        self.avatar = Avatar._from_user(self.avatar, self.dUserId)
 
 
 @dataclass
@@ -256,16 +214,16 @@ class ActivityRecord:
         ID of Activity
     name: :class:`str`
         Activity Name
-    icon: :class:`str`
+    icon: :class:`Avatar`
         Activity Icon
     """
 
     dId: str
     name: str
-    icon: str
+    icon: Avatar
 
     def __post_init__(self):
-        self.icon = f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+        self.icon = Avatar._from_activity(self.avatar, self.dId)
 
 
 @dataclass

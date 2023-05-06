@@ -1,9 +1,13 @@
 import datetime
 import io
-from typing import Final, List, Optional, Tuple, Union
+
+from typing import Final, List, Optional, Tuple, Union, TYPE_CHECKING
 
 import aiohttp
 import humanize
+
+if TYPE_CHECKING:
+    pass
 
 __all__: Tuple[str, ...] = (
     "icon_to_bytes",

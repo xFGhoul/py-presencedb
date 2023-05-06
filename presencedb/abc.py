@@ -1,8 +1,9 @@
 import os
 
-from aiofile import async_open
+from yarl import URL
 from dataclasses import dataclass
-from typing import Tuple, TYPE_CHECKING
+from aiofile import async_open
+from typing import Tuple, Self, TYPE_CHECKING
 
 from .utils import icon_to_bytes
 from .constants import API
@@ -18,6 +19,78 @@ __all__: Tuple[str, ...] = (
 )
 
 
+class Avatar:
+    """Class Representing an Avatar
+
+    Attributes
+    ----------
+    id: :class:`str`
+        ID of avatar
+    url :class:`str`
+        URL of Avatar
+
+    """
+
+    __slots__: Tuple[str, ...] = (
+        "avatar_id",
+        "discord_id",
+        "url",
+    )
+
+    def __init__(self, avatar_id: str, discord_id: str, url: str = "") -> None:
+        self.avatar_id: str = avatar_id
+        self.discord_id: str = discord_id
+        self.url: URL = url
+
+    def __repr__(self) -> str:
+        return f"<Avatar url={self.url}>"
+
+    def __eq__(self, other) -> bool:
+        return self.avatar_id == other.avatar_id
+
+    def __hash__(self) -> int:
+        return hash(self.avatar_id)
+
+    @classmethod
+    def _from_activity(cls, avatar_id: str, discord_id: str) -> Self:
+        return cls(
+            avatar_id=avatar_id,
+            discord_id=discord_id,
+            url=URL(f"{API.ICON_BASE}/{discord_id}/{avatar_id}"),
+        )
+
+    @classmethod
+    def _from_user(cls, avatar_id: str, discord_id: str) -> Self:
+        return cls(
+            avatar_id=avatar_id,
+            discord_id=discord_id,
+            url=URL(f"{API.AVATAR_BASE}/{discord_id}/{avatar_id}"),
+        )
+
+    @property
+    def id(self) -> str:
+        """Returns ID of Avatar
+
+        Returns
+        -------
+        str
+            Raw Avatar ID
+        """
+        return self.avatar_id
+
+    async def save(self, path: os.PathLike) -> None:
+        """Saves Current Avatar To File
+
+        Parameters
+        ----------
+        path : os.PathLike
+            Path To Save File Too
+        """
+        bytes: BytesIO = await icon_to_bytes(self.url)
+        async with async_open(path, "wb") as file:
+            await file.write(bytes.read())
+
+
 @dataclass
 class TopUser:
     """
@@ -27,8 +100,8 @@ class TopUser:
     ----------
     name: :class:`str`
         Name of User
-    avatar: :class:`str`
-        Avatar URL
+    avatar: :class:`Avatar`
+        User Avatar
     discriminator: :class:`str`
         User Discriminator
     dId: :class:`int`
@@ -38,25 +111,13 @@ class TopUser:
     """
 
     name: str
-    avatar: str
+    avatar: Avatar
     discriminator: str
     dId: int
     duration: int
 
     def __post_init__(self):
-        self.avatar = f"{API.AVATAR_BASE}/{self.dId}/{self.avatar}"
-
-    async def save(self, path: os.PathLike) -> None:
-        """Saves Current Activity To File
-
-        Parameters
-        ----------
-        path : os.PathLike
-            Path To Save File Too
-        """
-        bytes: BytesIO = await icon_to_bytes(self.avatar)
-        async with async_open(path, "wb") as file:
-            await file.write(bytes.read())
+        self.avatar = Avatar._from_user(self.avatar, self.dId)
 
 
 @dataclass
@@ -70,19 +131,19 @@ class TopActivity:
         Name of Activity
     dId: :class:`int`
         ID of Activity
-    icon: :class:`str`
-        Activity Icon URL
+    icon: :class:`Avatar`
+        Activity Icon
     duration: :class:`int`
         Duration Activity Was Played For
     """
 
     name: str
     dId: int
-    icon: str
+    icon: Avatar
     duration: int
 
     def __post_init__(self):
-        self.icon = f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+        self.icon = Avatar._from_activity(self.icon, self.dId)
 
 
 @dataclass
@@ -104,11 +165,11 @@ class TrendingActivity:
 
     name: str
     dId: int
-    icon: str
+    icon: Avatar
     duration: int
 
     def __post_init__(self):
-        self.icon = f"{API.ICON_BASE}/{self.dId}/{self.icon}"
+        self.icon = Avatar._from_activity(self.icon, self.dId)
 
 
 @dataclass

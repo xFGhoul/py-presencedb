@@ -101,6 +101,38 @@ class Client:
         else:
             raise UserNotFound
 
+    async def get_users(
+        self, user_ids: List[int], format: Optional[bool] = False
+    ) -> List[User]:
+        """Get Multiple User Profiles
+
+        Parameters
+        ----------
+        user_id : :class:`List[int]`
+            Discord ID's of Users
+        format : Optional[:class:`bool`]
+            If To Format User Data, by default False
+
+        Returns
+        -------
+        List[User]
+            List of Users
+
+        Raises
+        ------
+        UserNotFound
+            If The Users Were Not Found
+        """
+        users = []
+        for user_id in user_ids:
+            data = await self._make_request(f"user/{user_id}")
+            stats = await self._make_request(f"user/{user_id}/stats")
+            if data and stats is not None:
+                users.append(User(data, stats, format))
+            else:
+                raise UserNotFound
+        return users
+
     async def get_activity(
         self, activity_id: Union[int, ActivityID], format: Optional[bool] = False
     ) -> Activity:
