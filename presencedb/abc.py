@@ -26,7 +26,7 @@ class Avatar:
     ----------
     id: :class:`str`
         ID of avatar
-    url :class:`str`
+    url: :class:`str`
         URL of Avatar
 
     """
@@ -155,7 +155,7 @@ class TrendingActivity:
     ----------
     name: :class:`str`
         Name of Activity
-    dId: class:`int`
+    dId: :class:`int`
         ID of Activity
     icon: :class:`str`
         Activity Icon URL

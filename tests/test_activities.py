@@ -18,6 +18,18 @@ async def test_fetch_activity() -> None:
 
 
 @pytest.mark.asyncio
+async def test_fetch_multiple_activities() -> None:
+    session = aiohttp.ClientSession()
+    client = Client(session=session)
+
+    activities = await client.get_activities([ActivityID.VSCODE, ActivityID.VALORANT])
+    await client.cleanup()
+
+    assert activities[0].name == "Visual Studio Code"
+    assert activities[1].name == "VALORANT"
+
+
+@pytest.mark.asyncio
 async def test_fetch_top_activities() -> None:
     session = aiohttp.ClientSession()
     client = Client(session=session)

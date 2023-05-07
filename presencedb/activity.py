@@ -15,7 +15,7 @@ class Activity:
 
     Attributes
     ----------
-    id: class:`int`
+    id: :class:`int`
         Internal PresenceDB ID of Activity
     name: :class:`str`
         Name of Activity

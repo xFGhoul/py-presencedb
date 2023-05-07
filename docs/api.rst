@@ -92,17 +92,24 @@ AvatarHistory
     :members:
 
 Record
-~~~~~~~~~~~~~
+~~~~~~
 .. attributetable:: presencedb.user.Record
 
 .. autoclass:: presencedb.user.Record()
     :members:
 
 ActivityRecord
-~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
 .. attributetable:: presencedb.user.ActivityRecord
 
 .. autoclass:: presencedb.user.ActivityRecord()
+    :members:
+
+Avatar
+~~~~~~
+.. attributetable:: presencedb.abc.Avatar
+
+.. autoclass:: presencedb.abc.Avatar()
     :members:
 
 Enums

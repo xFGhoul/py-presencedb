@@ -14,78 +14,41 @@ class PresenceDBException(Exception):
 
     Attributes
     -----------
-    detail: :class:`str`
-        The details of this request
-    status_code: :class:`int`
-        The HTTP status code for this request.
+    message: :class:`str`
+        The messages of this request
     """
 
-    def __init__(self, detail: str, status_code: int) -> None:
-        self.detail: str = detail
-        self.status_code: int = status_code
-        super().__init__(detail, status_code)
+    def __init__(self, message: str) -> None:
+        self.message: str = message
+        super().__init__(message)
 
     def __repr__(self) -> str:
-        return f"<{self.__class__.__name__} detail={self.detail} status_code={self.status_code}>"
+        return f"<{self.__class__.__name__} message={self.message}>"
 
 
 class UserNotFound(PresenceDBException):
-    """Raised When User Could Not Be Found
+    """Raised When User Could Not Be Found"""
 
-    Attributes
-    -----------
-    detail: :class:`str`
-        The details of this request
-    status_code: :class:`int`
-        The HTTP status code for this request.
-    """
-
-    def __init__(self, detail: str, status_code: int) -> None:
-        super().__init__(detail="User Could Not Be Found", status_code=404)
+    def __init__(self, message: str) -> None:
+        super().__init__(message="User Could Not Be Found")
 
 
 class ActivityNotFound(PresenceDBException):
-    """Raised When User Could Not Be Found
+    """Raised When User Could Not Be Found"""
 
-    Attributes
-    -----------
-    detail: :class:`str`
-        The details of this request
-    status_code: :class:`int`
-        The HTTP status code for this request.
-    """
-
-    def __init__(self, detail: str, status_code: int) -> None:
-        super().__init__(detail="Activity Could Not Be Found", status_code=404)
+    def __init__(self, message: str) -> None:
+        super().__init__(message="Activity Could Not Be Found")
 
 
 class ActivitiesNotFound(PresenceDBException):
-    """Raised When User Could Not Be Found
+    """Raised When User Could Not Be Found"""
 
-    Attributes
-    -----------
-    detail: :class:`str`
-        The details of this request
-    status_code: :class:`int`
-        The HTTP status code for this request.
-    """
-
-    def __init__(self, detail: str, status_code: int) -> None:
-        super().__init__(detail="Activities Could Not Be Found", status_code=404)
+    def __init__(self, message: str) -> None:
+        super().__init__(message="Activities Could Not Be Found")
 
 
 class HTTPError(PresenceDBException):
-    """Raised When User Could Not Be Found
+    """Raised When User Could Not Be Found"""
 
-    Attributes
-    -----------
-    detail: :class:`str`
-        The details of this request
-    status_code: :class:`int`
-        The HTTP status code for this request.
-    """
-
-    def __init__(self, detail: str, status_code: int) -> None:
-        super().__init__(
-            detail="Activities Could Not Be Found", status_code=status_code
-        )
+    def __init__(self, message: str) -> None:
+        super().__init__(message="Activities Could Not Be Found")

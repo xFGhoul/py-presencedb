@@ -162,6 +162,40 @@ class Client:
         else:
             raise ActivityNotFound
 
+    async def get_activities(
+        self,
+        activity_ids: Union[List[int], List[ActivityID]],
+        format: Optional[bool] = False,
+    ) -> List[Activity]:
+        """Get Multiple Activities
+
+        Parameters
+        ----------
+        activity_ids: List[:class:`int`], List[ActivityID]
+            ID of Activities
+        format : Optional[:class:`bool`]
+            If Duration Values Should Be Formatted, by default False
+
+        Returns
+        -------
+        List[Activity]
+            List of Found Activities
+
+        Raises
+        ------
+        ActivityNotFound
+            If The Activity Could Not Be Found
+        """
+        activities = []
+        for activity_id in activity_ids:
+            data = await self._make_request(f"activity/{activity_id}")
+            stats = await self._make_request(f"activity/{activity_id}/stats")
+            if data and stats is not None:
+                activities.append(Activity(data, stats, format))
+            else:
+                raise ActivityNotFound
+        return activities
+
     async def get_top_activities(self) -> List[TopActivity]:
         """Returns Top Activities
 
