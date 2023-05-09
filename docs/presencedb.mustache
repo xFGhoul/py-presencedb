@@ -1,0 +1,35 @@
+{{! PresenceDB Docstring Template }}
+
+{{summaryPlaceholder}}
+
+{{#parametersExist}}
+
+Parameters
+----------
+{{#args}}
+{{var}}: :class:`{{typePlaceholder}}`
+    {{descriptionPlaceholder}}
+{{/args}}
+{{#kwargs}}:
+{{var}}: :class:`{{typePlaceholder}}`
+    {{descriptionPlaceholder}}. Defaults to {{&default}}
+{{/kwargs}}
+{{/parametersExist}}
+{{#returnsExist}}
+
+Returns
+-------
+{{#returns}}
+{{typePlaceholder}}
+    {{descriptionPlaceholder}}
+{{/returns}}
+{{/returnsExist}}
+
+{{#exceptionsExist}}
+Raises
+------
+{{#exceptions}}
+{{type}}
+    {{descriptionPlaceholder}}
+{{/exceptions}}
+{{/exceptionsExist}}

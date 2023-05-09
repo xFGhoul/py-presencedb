@@ -1,0 +1,3 @@
+{
+    "autoDocstring.customTemplatePath": "docs/presencedb.mustache"
+}
