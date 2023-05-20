@@ -1,7 +1,7 @@
 import os
 
 from yarl import URL
-from dataclasses import dataclass
+from msgspec import Struct
 from aiofile import async_open
 from typing import Tuple, Self, TYPE_CHECKING
 
@@ -56,7 +56,7 @@ class Avatar:
         return cls(
             avatar_id=avatar_id,
             discord_id=discord_id,
-            url=URL(f"{API.ICON_BASE}/{discord_id}/{avatar_id}"),
+            url=URL(f"{API.ICON}/{discord_id}/{avatar_id}"),
         )
 
     @classmethod
@@ -64,7 +64,7 @@ class Avatar:
         return cls(
             avatar_id=avatar_id,
             discord_id=discord_id,
-            url=URL(f"{API.AVATAR_BASE}/{discord_id}/{avatar_id}"),
+            url=URL(f"{API.AVATAR}/{discord_id}/{avatar_id}"),
         )
 
     @property
@@ -91,8 +91,7 @@ class Avatar:
             await file.write(bytes.read())
 
 
-@dataclass
-class TopUser:
+class TopUser(Struct):
     """
     Class Representing A Top User
 
@@ -120,8 +119,7 @@ class TopUser:
         self.avatar = Avatar._from_user(self.avatar, self.dId)
 
 
-@dataclass
-class TopActivity:
+class TopActivity(Struct):
     """
     Class Representing A Top Activity
 
@@ -145,9 +143,11 @@ class TopActivity:
     def __post_init__(self):
         self.icon = Avatar._from_activity(self.icon, self.dId)
 
+    def __repr__(self) -> str:
+        return f"<TopActivity name={self.name}>"
 
-@dataclass
-class TrendingActivity:
+
+class TrendingActivity(Struct):
     """
     Class Representing A Trending Activity
 
@@ -171,9 +171,11 @@ class TrendingActivity:
     def __post_init__(self):
         self.icon = Avatar._from_activity(self.icon, self.dId)
 
+    def __repr__(self) -> str:
+        return f"<TrendingActivity name={self.name}>"
 
-@dataclass
-class PlaytimeDate:
+
+class PlaytimeDate(Struct):
     """
     Class Representing A Playtime Date
 

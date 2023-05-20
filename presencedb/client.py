@@ -1,17 +1,17 @@
 import logging
-from typing import Dict, List, Optional, Tuple, Union
 
-import aiohttp
+from typing import List, Optional, Tuple, Union, Self, Any
 from aiohttp import ClientSession
 
 from .abc import TopActivity, TrendingActivity
 from .activity import Activity
-from .constants import API
 from .enums import ActivityID
-from .errors import ActivitiesNotFound, ActivityNotFound, UserNotFound
 from .user import User
+from .http import Route, HTTP
 
 __all__: Tuple[str, ...] = ("Client",)
+
+logger = logging.getLogger(__name__)
 
 
 class Client:
@@ -23,42 +23,16 @@ class Client:
         Client Session Used For HTTP Requests
     """
 
-    __slots__ = (
-        "session",
-        "logger",
-    )
-
     def __init__(self, session: Optional[ClientSession] = None) -> None:
-        self.logger = logging.getLogger(__name__)
-        if session is None:
-            self.session = aiohttp.ClientSession(headers=API.HEADERS)
-        else:
-            self.session = session
+        self._http = HTTP(session=session)
 
-    async def _make_request(self, target: str) -> Dict:
-        """
+    async def __aenter__(self) -> Self:
+        if self._http.session is None:
+            await self._http.create_client_session()
+        return self
 
-        Sends An HTTP /GET Request To PresenceDB API
-
-        Parameters
-        ----------
-        target: :class:`str`
-            API Endpoint
-
-        Returns
-        -------
-        Dict
-            JSON Response From API
-
-        Raises
-        ------
-        HTTPError
-            If The Request Failed
-        """
-        async with self.session.get(API.BASE_URL / target) as response:
-            self.logger.debug(f"Sending HTTP /GET Request: {API.BASE_URL}/{target}")
-            json = await response.json()
-            return json
+    async def __aexit__(self, *args: Any) -> None:
+        await self.cleanup()
 
     async def cleanup(self) -> None:
         """Closes The Current Client Session
@@ -68,11 +42,11 @@ class Client:
         RuntimeError
             If The Session Was Already Closed
         """
-        if self.session.closed:
+        if self._http.session.closed:
             raise RuntimeError("Client Session Already Closed.")
-        self.logger.debug("Closing Session")
-        await self.session.close()
-        self.logger.debug("Session Closed")
+        logger.debug("Closing Session")
+        await self._http.session.close()
+        logger.debug("Session Closed")
 
     async def get_user(self, user_id: int, format: Optional[bool] = False) -> User:
         """Get A User's Profile
@@ -94,12 +68,11 @@ class Client:
         UserNotFound
             If The User Was Not Found
         """
-        data = await self._make_request(f"user/{user_id}")
-        stats = await self._make_request(f"user/{user_id}/stats")
-        if data and stats is not None:
-            return User(data, stats, format)
-        else:
-            raise UserNotFound
+        data = await self._http.request(Route("GET", "user/{user_id}", user_id=user_id))
+        stats = await self._http.request(
+            Route("GET", "user/{user_id}/stats", user_id=user_id)
+        )
+        return User(data, stats, format)
 
     async def get_users(
         self, user_ids: List[int], format: Optional[bool] = False
@@ -125,12 +98,13 @@ class Client:
         """
         users = []
         for user_id in user_ids:
-            data = await self._make_request(f"user/{user_id}")
-            stats = await self._make_request(f"user/{user_id}/stats")
-            if data and stats is not None:
-                users.append(User(data, stats, format))
-            else:
-                raise UserNotFound
+            data = await self._http.request(
+                Route("GET", "user/{user_id}", user_id=user_id)
+            )
+            stats = await self._http.request(
+                Route("GET", "user/{user_id}/stats", user_id=user_id)
+            )
+            users.append(User(data, stats, format))
         return users
 
     async def get_activity(
@@ -155,12 +129,13 @@ class Client:
         ActivityNotFound
             If The Activity Could Not Be Found
         """
-        data = await self._make_request(f"activity/{activity_id}")
-        stats = await self._make_request(f"activity/{activity_id}/stats")
-        if data and stats is not None:
-            return Activity(data, stats, format)
-        else:
-            raise ActivityNotFound
+        data = await self._http.request(
+            Route("GET", "activity/{activity_id}", activity_id=activity_id)
+        )
+        stats = await self._http.request(
+            Route("GET", "activity/{activity_id}/stats", activity_id=activity_id)
+        )
+        return Activity(data, stats, format)
 
     async def get_activities(
         self,
@@ -188,12 +163,13 @@ class Client:
         """
         activities = []
         for activity_id in activity_ids:
-            data = await self._make_request(f"activity/{activity_id}")
-            stats = await self._make_request(f"activity/{activity_id}/stats")
-            if data and stats is not None:
-                activities.append(Activity(data, stats, format))
-            else:
-                raise ActivityNotFound
+            data = await self._http.request(
+                Route("GET", "activity/{activity_id}", activity_id=activity_id)
+            )
+            stats = await self._http.request(
+                Route("GET", "activity/{activity_id}/stats", activity_id=activity_id)
+            )
+            activities.append(Activity(data, stats, format))
         return activities
 
     async def get_top_activities(self) -> List[TopActivity]:
@@ -209,12 +185,8 @@ class Client:
         ActivitiesNotFound
             Top Activities Could Not Be Fetched
         """
-        data = await self._make_request("activities/top")
-        if data:
-            top_activities = [TopActivity(**activity) for activity in data]
-            return top_activities
-        else:
-            raise ActivitiesNotFound
+        data = await self._http.request(Route("GET", "activities/top"))
+        return [TopActivity(**activity) for activity in data]
 
     async def get_trending_activities(self) -> List[TrendingActivity]:
         """Returns Current Trending Activities
@@ -228,9 +200,5 @@ class Client:
         ActivitiesNotFound
             Trending Activities Could Not Be Fetched
         """
-        data = await self._make_request("activities/trending")
-        if data:
-            trending_activities = [TrendingActivity(**activity) for activity in data]
-            return trending_activities
-        else:
-            raise ActivitiesNotFound
+        data = await self._http.request(Route("GET", "activities/trending"))
+        return [TrendingActivity(**activity) for activity in data]

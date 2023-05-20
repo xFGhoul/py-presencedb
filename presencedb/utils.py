@@ -1,13 +1,10 @@
 import datetime
 import io
 
-from typing import Final, List, Optional, Tuple, Union, TYPE_CHECKING
+from typing import Final, List, Optional, Tuple, Union
 
 import aiohttp
 import humanize
-
-if TYPE_CHECKING:
-    pass
 
 __all__: Tuple[str, ...] = (
     "icon_to_bytes",
@@ -33,8 +30,7 @@ async def icon_to_bytes(icon: str) -> io.BytesIO:
     """
     async with aiohttp.ClientSession() as session:
         async with session.get(icon) as response:
-            buffer = io.BytesIO(await response.read())
-            return buffer
+            return io.BytesIO(await response.read())
 
 
 def humanize_duration(

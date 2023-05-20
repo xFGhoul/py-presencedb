@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from msgspec import Struct
 from typing import Dict, List, Tuple
 
 from .abc import PlaytimeDate, TopActivity, TrendingActivity, Avatar
@@ -18,7 +18,7 @@ class User:
     ----------
     id: :class:`int`
         PresenceDB Internal User ID
-    dId: :class:`int`
+    discord_id: :class:`int`
         User Discord ID
     name: :class:`str`
         User's Name
@@ -48,7 +48,7 @@ class User:
 
     __slots__: Tuple[str, ...] = (
         "id",
-        "dId",
+        "discord_id",
         "name",
         "discriminator",
         "inactive",
@@ -66,14 +66,14 @@ class User:
 
     def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
         self.id: int = data.get("id")
-        self.dId: int = data.get("dId")
+        self.discord_id: int = data.get("dId")
         self.name: str = data.get("name")
         self.discriminator: str = data.get("discriminator")
         self.inactive: str = data.get("inactiveSince")
         self.private: bool = data.get("private")
         self.added: str = data.get("added")
         self.color: str = data.get("color")
-        self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.dId)
+        self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.discord_id)
         self.plus: bool = data.get("plus")
         self.tracker: Dict | None = data.get("tracker")
         self.timestamp: str | None = (
@@ -85,16 +85,16 @@ class User:
             else None
         )
         self.stats: UserStats = UserStats(stats, should_format)
-        self.tag: str = self.name + f"#{self.discriminator}"
+        self.tag: str = f"{self.name}#{self.discriminator}"
 
-        def __repr__(self):
-            return f"<User tag={self.tag}>"
+    def __repr__(self):
+        return f"<User tag={self.tag!r}>"
 
-        def __eq__(self, other):
-            return self.id == other.id
+    def __eq__(self, other):
+        return self.id == other.id
 
-        def __hash__(self) -> int:
-            return hash(self.id)
+    def __hash__(self) -> int:
+        return hash(self.id)
 
 
 class UserStats:
@@ -131,14 +131,14 @@ class UserStats:
 
     def __init__(self, stats: Dict, should_format) -> None:
         self.total_duration: str = (
-            stats.get("totalDuration")
-            if not should_format
-            else humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
+            humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
+            if should_format
+            else stats.get("totalDuration")
         )
         self.trending_duration: str = (
-            stats.get("trendingDuration")
-            if not should_format
-            else humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
+            humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
+            if should_format
+            else stats.get("trendingDuration")
         )
         self.playtime_dates: List[PlaytimeDate] = [
             PlaytimeDate(**playtime_date)
@@ -158,8 +158,7 @@ class UserStats:
         ]
 
 
-@dataclass
-class CurrentActivity:
+class CurrentActivity(Struct):
     """
     Class Representing A Current Activity
 
@@ -175,8 +174,7 @@ class CurrentActivity:
     id: int
 
 
-@dataclass
-class AvatarHistory:
+class AvatarHistory(Struct):
     """
     Class Representing A User's Avatar History
 
@@ -204,8 +202,7 @@ class AvatarHistory:
         self.avatar = Avatar._from_user(self.avatar, self.dUserId)
 
 
-@dataclass
-class ActivityRecord:
+class ActivityRecord(Struct):
     """Class Representing an Activity Record
 
     Attributes
@@ -226,8 +223,7 @@ class ActivityRecord:
         self.icon = Avatar._from_activity(self.avatar, self.dId)
 
 
-@dataclass
-class Record:
+class Record(Struct):
     """
     Class Representing A User's Activity History
 

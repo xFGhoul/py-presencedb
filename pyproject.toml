@@ -1,7 +1,11 @@
 [tool.pdm]
 [tool.pdm.dev-dependencies]
 dev = ["rich", "asyncio", "pre-commit"]
-test = ["pytest", "pytest-asyncio"]
+test = [
+    "pytest",
+    "pytest-asyncio",
+    "pytest-profiling>=1.7.0",
+]
 docs = ["sphinx==4.4.0",
     "sphinxcontrib-trio==1.1.2",
     "sphinxcontrib-websupport>=1.2.4",
@@ -11,6 +15,7 @@ docs = ["sphinx==4.4.0",
 [tool.pdm.scripts]
 local = "python testing.py"
 tests = "pytest -m asyncio tests/"
+tests-profile = "pytest -m asyncio tests/ --profile-svg"
 
 [project]
 name = "presencedb"
@@ -24,6 +29,7 @@ dependencies = [
     "humanize>=4.6.0",
     "yarl>=1.8.2",
     "aiofile>=3.8.5",
+    "msgspec>=0.15.1",
 ]
 requires-python = ">=3.11"
 license = {text = "MIT"}
@@ -32,6 +38,9 @@ license = {text = "MIT"}
 pythonpath = [
   "."
 ]
+console_output_style = "progress"
+required_plugins =  ["pytest-profiling"]
+log_cli = true
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 

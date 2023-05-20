@@ -10,7 +10,6 @@ Client
 
 .. autoclass:: Client
     :members:
-    :exclude-members: _make_request
 
 Models
 ------
@@ -174,13 +173,11 @@ Exceptions
 
 .. autoexception:: PresenceDBException()
 
-.. autoexception:: HTTPError()
+.. autoexception:: HTTPException()
 
-.. autoexception:: UserNotFound()
+.. autoexception:: NotFound()
 
-.. autoexception:: ActivityNotFound()
-
-.. autoexception:: ActivitiesNotFound()
+.. autoexception:: PresenceDBError()
 
 
 Exception Hierarchy
@@ -190,7 +187,6 @@ Exception Hierarchy
 
     - :exc:`Exception`
         - :exc:`PresenceDBException`
-           - :exc:`HTTPError`
-           - :exc:`UserNotFound`
-           - :exc:`ActivityNotFound`
-           - :exc:`ActivitiesNotFound`
+           - :exc:`HTTPException`
+            - :exc:`NotFound`
+            - :exc:`PresenceDBError`

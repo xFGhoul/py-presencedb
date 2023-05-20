@@ -19,7 +19,7 @@ class Activity:
         Internal PresenceDB ID of Activity
     name: :class:`str`
         Name of Activity
-    dId: :class:`int`
+    discord_id: :class:`int`
         ID of Activity
     added: :class:`str`
         Date Activity Was Added
@@ -34,7 +34,7 @@ class Activity:
     __slots__: Tuple[str, ...] = (
         "id",
         "name",
-        "dId",
+        "discord_id",
         "added",
         "icon",
         "color",
@@ -44,20 +44,20 @@ class Activity:
     def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
         self.id: int = data.get("id")
         self.name: str = data.get("name")
-        self.dId: int = data.get("dId")
+        self.discord_id: int = data.get("dId")
         self.added: str = data.get("added")
-        self.icon: Avatar = Avatar._from_activity(data.get("icon"), self.dId)
+        self.icon: Avatar = Avatar._from_activity(data.get("icon"), self.discord_id)
         self.color: str = data.get("color")
         self.stats: ActivityStats = ActivityStats(stats, should_format)
 
-        def __repr__(self) -> str:
-            return f"<Activity name={self.name}>"
+    def __repr__(self) -> str:
+        return f"<Activity name={self.name!r}>"
 
-        def __eq__(self, other) -> bool:
-            return self.id == other.id
+    def __eq__(self, other) -> bool:
+        return self.id == other.id
 
-        def __hash__(self) -> int:
-            return hash(self.id)
+    def __hash__(self) -> int:
+        return hash(self.id)
 
 
 class ActivityStats:
@@ -94,3 +94,6 @@ class ActivityStats:
             PlaytimeDate(**playtime_date)
             for playtime_date in stats.get("playtimeDates")
         ]
+
+    def __repr__(self) -> str:
+        return f"<ActivityStats total_duration={self.total_duration!r}>"

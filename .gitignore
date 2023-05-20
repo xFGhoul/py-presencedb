@@ -138,3 +138,4 @@ docs/apidocs
 testing.py
 test-logs.log
 .pdm-python
+prof/
