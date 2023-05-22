@@ -7,7 +7,7 @@ __all__: Tuple[str, ...] = ("ActivityID",)
 class ActivityID:
     """Class Representing Activity ID's"""
 
-    SPOTIFY: Final[int] = 000000000000000000
+    SPOTIFY: Final[str] = "000000000000000000"
     YOUTUBE: Final[int] = 463097721130188830
     VALORANT: Final[int] = 700136079562375258
     ROBLOX: Final[int] = 363445589247131668

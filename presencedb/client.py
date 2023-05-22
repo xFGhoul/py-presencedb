@@ -108,13 +108,13 @@ class Client:
         return users
 
     async def get_activity(
-        self, activity_id: Union[int, ActivityID], format: Optional[bool] = False
+        self, activity_id: Union[int, str, ActivityID], format: Optional[bool] = False
     ) -> Activity:
         """Get An Activity
 
         Parameters
         ----------
-        activity_id : Union[:class:`int`, ActivityID]
+        activity_id : Union[:class:`int`, class:`str`, ActivityID]
             ID of Activity
         format : Optional[:class:`bool`]
             If Duration Values Should Be Formatted, by default False
@@ -139,14 +139,14 @@ class Client:
 
     async def get_activities(
         self,
-        activity_ids: Union[List[int], List[ActivityID]],
+        activity_ids: Union[List[int], List[str], List[ActivityID]],
         format: Optional[bool] = False,
     ) -> List[Activity]:
         """Get Multiple Activities
 
         Parameters
         ----------
-        activity_ids: List[:class:`int`], List[ActivityID]
+        activity_ids: List[:class:`int`], List[:class:`str`], List[ActivityID]
             ID of Activities
         format : Optional[:class:`bool`]
             If Duration Values Should Be Formatted, by default False

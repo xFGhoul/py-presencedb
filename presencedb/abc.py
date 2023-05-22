@@ -5,6 +5,7 @@ from msgspec import Struct
 from aiofile import async_open
 from typing import Tuple, Self, TYPE_CHECKING
 
+from .enums import ActivityID
 from .utils import icon_to_bytes
 from .constants import API
 
@@ -53,10 +54,14 @@ class Avatar:
 
     @classmethod
     def _from_activity(cls, avatar_id: str, discord_id: str) -> Self:
-        return cls(
-            avatar_id=avatar_id,
-            discord_id=discord_id,
-            url=URL(f"{API.ICON}/{discord_id}/{avatar_id}"),
+        return (
+            cls(
+                avatar_id=avatar_id,
+                discord_id=discord_id,
+                url=URL(f"{API.ICON}/{discord_id}/{avatar_id}"),
+            )
+            if discord_id != ActivityID.SPOTIFY
+            else cls(avatar_id=avatar_id, discord_id=discord_id, url=API.SPOTIFY)
         )
 
     @classmethod
@@ -86,9 +91,9 @@ class Avatar:
         path : os.PathLike
             Path To Save File Too
         """
-        bytes: BytesIO = await icon_to_bytes(self.url)
+        avatar: BytesIO = await icon_to_bytes(self.url)
         async with async_open(path, "wb") as file:
-            await file.write(bytes.read())
+            await file.write(avatar.read())
 
 
 class TopUser(Struct):

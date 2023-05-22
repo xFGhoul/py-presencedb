@@ -78,14 +78,14 @@ class ActivityStats:
 
     def __init__(self, stats: Dict, should_format: bool) -> None:
         self.total_duration: str = (
-            stats.get("totalDuration")
-            if not should_format
-            else humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
+            humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
+            if should_format
+            else stats.get("totalDuration")
         )
         self.trending_duration: str = (
-            stats.get("trendingDuration")
-            if not should_format
-            else humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
+            humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
+            if should_format
+            else stats.get("trendingDuration")
         )
         self.top_users: List[TopUser] = [
             TopUser(**top_user) for top_user in stats.get("topUsers")
