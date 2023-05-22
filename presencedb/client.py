@@ -81,7 +81,7 @@ class Client:
 
         Parameters
         ----------
-        user_id : :class:`List[int]`
+        user_id : List[:class:`int`]
             Discord ID's of Users
         format : Optional[:class:`bool`]
             If To Format User Data, by default False

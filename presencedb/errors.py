@@ -41,18 +41,12 @@ class HTTPException(PresenceDBException):
         self.response: Optional[ClientResponse] = response
         self.data: Any = data
 
-        self.message: Optional[str]
-        self.success: Optional[str]
-
-        if isinstance(data, dict):
-            self.message = data.get("error", {})
-            self.success = data.get("success", {})
-        else:
-            self.message = None
-            self.success = None
+        self.message: Optional[str] = (
+            data.get("error", {}) if isinstance(data, dict) else None
+        )
 
         super().__init__(
-            f'{self.success or "No code."}: {self.message or "No message"}.',
+            f"{self.message or 'No message'}",
             *args,
             **kwargs,
         )
