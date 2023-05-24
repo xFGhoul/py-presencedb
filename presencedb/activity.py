@@ -1,7 +1,12 @@
 from typing import Dict, List, Tuple
 
 from .abc import PlaytimeDate, TopUser, Avatar
-from .utils import HUMANIZE_DAYS, HUMNANIZE_HOURS, humanize_duration
+from .utils import (
+    HUMANIZE_DAYS,
+    HUMNANIZE_HOURS,
+    humanize_duration,
+    humanize_iso_format,
+)
 
 __all__: Tuple[str, ...] = (
     "Activity",
@@ -41,14 +46,16 @@ class Activity:
         "stats",
     )
 
-    def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
+    def __init__(self, data: Dict, stats: Dict, format: bool) -> None:
         self.id: int = data.get("id")
         self.name: str = data.get("name")
         self.discord_id: int = data.get("dId")
-        self.added: str = data.get("added")
+        self.added: str = (
+            humanize_iso_format(data.get("added")) if format else data.get("added")
+        )
         self.icon: Avatar = Avatar._from_activity(data.get("icon"), self.discord_id)
         self.color: str = data.get("color")
-        self.stats: ActivityStats = ActivityStats(stats, should_format)
+        self.stats: ActivityStats = ActivityStats(stats, format)
 
     def __repr__(self) -> str:
         return f"<Activity name={self.name!r}>"
@@ -76,23 +83,22 @@ class ActivityStats:
         List of Playtime Dates For Activity
     """
 
-    def __init__(self, stats: Dict, should_format: bool) -> None:
+    def __init__(self, stats: Dict, format: bool) -> None:
         self.total_duration: str = (
             humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
-            if should_format
+            if format
             else stats.get("totalDuration")
         )
         self.trending_duration: str = (
             humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
-            if should_format
+            if format
             else stats.get("trendingDuration")
         )
         self.top_users: List[TopUser] = [
-            TopUser(**top_user) for top_user in stats.get("topUsers")
+            TopUser(user, format) for user in stats.get("topUsers")
         ]
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date)
-            for playtime_date in stats.get("playtimeDates")
+            PlaytimeDate(date, format) for date in stats.get("playtimeDates")
         ]
 
     def __repr__(self) -> str:

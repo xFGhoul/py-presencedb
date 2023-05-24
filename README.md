@@ -33,7 +33,7 @@ client = Client()
 
 
 async def get_user(id):
-    user = await client.get_user(id, should_format=True)
+    user = await client.get_user(id, format=True)
     print(user.current_activity)
     print(user.stats.top_activities)
     print(user.stats.total_duration)

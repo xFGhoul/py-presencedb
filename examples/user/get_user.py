@@ -6,7 +6,7 @@ client = Client()
 
 
 async def get_user(discord_id):
-    user = await client.get_user(discord_id, should_format=True)
+    user = await client.get_user(discord_id, format=True)
     print(user.current_activities)
     print(user.stats.top_activities)
     print(user.stats.total_duration)

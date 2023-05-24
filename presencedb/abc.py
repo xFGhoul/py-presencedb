@@ -3,10 +3,10 @@ import os
 from yarl import URL
 from msgspec import Struct
 from aiofile import async_open
-from typing import Tuple, Self, TYPE_CHECKING
+from typing import Tuple, Dict, Self, TYPE_CHECKING
 
 from .enums import ActivityID
-from .utils import icon_to_bytes
+from .utils import icon_to_bytes, humanize_iso_format, humanize_duration, HUMANIZE_DAYS
 from .constants import API
 
 if TYPE_CHECKING:
@@ -96,7 +96,7 @@ class Avatar:
             await file.write(avatar.read())
 
 
-class TopUser(Struct):
+class TopUser:
     """
     Class Representing A Top User
 
@@ -114,14 +114,27 @@ class TopUser(Struct):
         Duration User Has on Activity
     """
 
-    name: str
-    avatar: Avatar
-    discriminator: str
-    dId: int
-    duration: int
+    __slots__: Tuple[str, ...] = (
+        "name",
+        "discord_id",
+        "avatar",
+        "discriminator",
+        "duration",
+    )
 
-    def __post_init__(self):
-        self.avatar = Avatar._from_user(self.avatar, self.dId)
+    def __init__(self, data: Dict, format: bool) -> None:
+        self.name: str = data.get("name")
+        self.discord_id: int = data.get("dId")
+        self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.discord_id)
+        self.discriminator: str = data.get("discriminator")
+        self.duration: int = (
+            humanize_duration(data.get("duration"), HUMANIZE_DAYS)
+            if format
+            else data.get("duration")
+        )
+
+    def __repr__(self) -> str:
+        return f"<TopUser name={self.name!r} duration={self.duration!r}>"
 
 
 class TopActivity(Struct):
@@ -180,7 +193,7 @@ class TrendingActivity(Struct):
         return f"<TrendingActivity name={self.name}>"
 
 
-class PlaytimeDate(Struct):
+class PlaytimeDate:
     """
     Class Representing A Playtime Date
 
@@ -192,5 +205,20 @@ class PlaytimeDate(Struct):
         Duration Activity Was Played For In Seconds
     """
 
-    date: str
-    duration: int
+    __slots__: Tuple[str, ...] = (
+        "date",
+        "duration",
+    )
+
+    def __init__(self, data: Dict, format: bool) -> None:
+        self.date: str = (
+            humanize_iso_format(data.get("date")) if format else data.get("date")
+        )
+        self.duration: int = (
+            humanize_duration(data.get("duration"), HUMANIZE_DAYS)
+            if format
+            else data.get("duration")
+        )
+
+    def __repr__(self) -> str:
+        return f"<PlaytimeDate date={self.date!r} duration={self.duration!r}>"

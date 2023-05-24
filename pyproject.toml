@@ -1,6 +1,6 @@
 [tool.pdm]
 [tool.pdm.dev-dependencies]
-dev = ["rich", "asyncio", "pre-commit"]
+dev = ["rich", "asyncio", "pre-commit", "ruff"]
 test = [
     "pytest",
     "pytest-asyncio",

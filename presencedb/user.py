@@ -2,7 +2,12 @@ from msgspec import Struct
 from typing import Dict, List, Tuple
 
 from .abc import PlaytimeDate, TopActivity, TrendingActivity, Avatar
-from .utils import HUMANIZE_DAYS, HUMNANIZE_HOURS, humanize_duration
+from .utils import (
+    HUMANIZE_DAYS,
+    HUMNANIZE_HOURS,
+    humanize_duration,
+    humanize_iso_format,
+)
 
 __all__: Tuple[str, ...] = (
     "User",
@@ -64,14 +69,16 @@ class User:
         "tag",
     )
 
-    def __init__(self, data: Dict, stats: Dict, should_format: bool) -> None:
+    def __init__(self, data: Dict, stats: Dict, format: bool) -> None:
         self.id: int = data.get("id")
         self.discord_id: int = data.get("dId")
         self.name: str = data.get("name")
         self.discriminator: str = data.get("discriminator")
         self.inactive: str = data.get("inactiveSince")
         self.private: bool = data.get("private")
-        self.added: str = data.get("added")
+        self.added: str = (
+            humanize_iso_format(data.get("added")) if format else data.get("added")
+        )
         self.color: str = data.get("color")
         self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.discord_id)
         self.plus: bool = data.get("plus")
@@ -84,7 +91,7 @@ class User:
             if self.tracker
             else None
         )
-        self.stats: UserStats = UserStats(stats, should_format)
+        self.stats: UserStats = UserStats(stats, format)
         self.tag: str = f"{self.name}#{self.discriminator}"
 
     def __repr__(self):
@@ -129,20 +136,19 @@ class UserStats:
         "records",
     )
 
-    def __init__(self, stats: Dict, should_format) -> None:
+    def __init__(self, stats: Dict, format) -> None:
         self.total_duration: str = (
             humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
-            if should_format
+            if format
             else stats.get("totalDuration")
         )
         self.trending_duration: str = (
             humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
-            if should_format
+            if format
             else stats.get("trendingDuration")
         )
         self.playtime_dates: List[PlaytimeDate] = [
-            PlaytimeDate(**playtime_date)
-            for playtime_date in stats.get("playtimeDates")
+            PlaytimeDate(date, format) for date in stats.get("playtimeDates")
         ]
         self.top_activities: List[TopActivity] = [
             TopActivity(**activity) for activity in stats.get("topActivities")
@@ -151,11 +157,14 @@ class UserStats:
             TrendingActivity(**activity) for activity in stats.get("trendingActivities")
         ]
         self.avatar_history: List[AvatarHistory] = [
-            AvatarHistory(**avatar) for avatar in stats.get("avatarHistory")
+            AvatarHistory(avatar, format) for avatar in stats.get("avatarHistory")
         ]
         self.records: List[Record] = [
-            Record(**record) for record in stats.get("records")
+            Record(record, format) for record in stats.get("records")
         ]
+
+    def __repr__(self) -> str:
+        return f"<UserStats total_duration={self.total_duration!r}>"
 
 
 class CurrentActivity(Struct):
@@ -174,7 +183,7 @@ class CurrentActivity(Struct):
     id: int
 
 
-class AvatarHistory(Struct):
+class AvatarHistory:
     """
     Class Representing A User's Avatar History
 
@@ -182,7 +191,7 @@ class AvatarHistory(Struct):
     ----------
     id: :class:`int`
         ID of Avatar
-    dId: :class:`int`
+    discord_id: :class:`int`
         Discord ID Pertaining to Avatar
     avatar: :class:`Avatar`
         Avatar
@@ -192,14 +201,25 @@ class AvatarHistory(Struct):
         Whether Avatar Is Hidden From Site
     """
 
-    id: int
-    dUserId: int
-    avatar: Avatar
-    added: str
-    hidden: bool
+    __slots__: Tuple[str, ...] = (
+        "id",
+        "discord_id",
+        "avatar",
+        "added",
+        "hidden",
+    )
 
-    def __post_init__(self):
-        self.avatar = Avatar._from_user(self.avatar, self.dUserId)
+    def __init__(self, data: Dict, format: bool) -> None:
+        self.id: int = data.get("id")
+        self.discord_id: int = data.get("dUserId")
+        self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.discord_id)
+        self.added: str = (
+            humanize_iso_format(data.get("added")) if format else data.get("added")
+        )
+        self.hidden: bool = data.get("hidden")
+
+    def __repr__(self) -> str:
+        return f"<AvatarHistory avatar={self.avatar!r} added={self.added!r}>"
 
 
 class ActivityRecord(Struct):
@@ -223,7 +243,7 @@ class ActivityRecord(Struct):
         self.icon = Avatar._from_activity(self.avatar, self.dId)
 
 
-class Record(Struct):
+class Record:
     """
     Class Representing A User's Activity History
 
@@ -235,17 +255,34 @@ class Record(Struct):
         Date This Activity was Played
     duration: :class:`int`
         Duration of Activity Played
-    dActivityId: :class:`str`
+    activity_id: :class:`str`
         ID of Activity Played
-    dUserId: :class:`str`
+    discord_id: :class:`str`
         Discord ID of User Playing The Activity
-    Activity: :class:`dict`
+    activity: :class:`dict`
         Dict Of Information Referencing the Activity
     """
 
-    id: int
-    date: str
-    duration: int
-    dActivityId: str
-    dUserId: str
-    Activity: ActivityRecord
+    __slots__: Tuple[str, ...] = (
+        "id",
+        "date",
+        "duration",
+        "activity_id",
+        "discord_id",
+        "activity",
+    )
+
+    def __init__(self, data: Dict, format: bool) -> None:
+        self.id: int = data.get("id")
+        self.date: str = (
+            humanize_iso_format(data.get("date")) if format else data.get("date")
+        )
+        self.duration: int = (
+            humanize_duration(data.get("duration")) if format else data.get("duration")
+        )
+        self.activity_id: str = data.get("dActivityId")
+        self.discord_id: str = data.get("dUserId")
+        self.activity: ActivityRecord = data.get("Activity")
+
+    def __repr__(self) -> str:
+        return f"<Record date={self.date!r} duration={self.duration!r}>"
