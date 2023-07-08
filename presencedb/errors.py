@@ -10,7 +10,7 @@ __all__: Tuple[str, ...] = (
 
 
 class PresenceDBException(Exception):
-    """The base Tixte Exception. All Tixte Exceptions inherit from this."""
+    """The base PresenceDB Exception. All PresenceDB Exceptions inherit from this."""
 
     __slots__: Tuple[str, ...] = ()
 
