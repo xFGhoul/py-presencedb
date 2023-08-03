@@ -69,7 +69,9 @@ class User:
         "tag",
     )
 
-    def __init__(self, data: Dict, stats: Dict, format: bool) -> None:
+    def __init__(
+        self, data: Dict, stats: Dict, trending: Dict, top: Dict, format: bool
+    ) -> None:
         self.id: int = data.get("id")
         self.discord_id: int = data.get("dId")
         self.name: str = data.get("name")
@@ -91,7 +93,7 @@ class User:
             if self.tracker
             else None
         )
-        self.stats: UserStats = UserStats(stats, format)
+        self.stats: UserStats = UserStats(stats, trending, top, format)
         self.tag: str = f"{self.name}#{self.discriminator}"
 
     def __repr__(self):
@@ -136,7 +138,7 @@ class UserStats:
         "records",
     )
 
-    def __init__(self, stats: Dict, format) -> None:
+    def __init__(self, stats: Dict, trending: Dict, top: Dict, format: bool) -> None:
         self.total_duration: str = (
             humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
             if format
@@ -151,10 +153,10 @@ class UserStats:
             PlaytimeDate(date, format) for date in stats.get("playtimeDates")
         ]
         self.top_activities: List[TopActivity] = [
-            TopActivity(**activity) for activity in stats.get("topActivities")
+            TopActivity(**activity) for activity in top
         ]
         self.trending_activities: List[TrendingActivity] = [
-            TrendingActivity(**activity) for activity in stats.get("trendingActivities")
+            TrendingActivity(**activity) for activity in trending
         ]
         self.avatar_history: List[AvatarHistory] = [
             AvatarHistory(avatar, format) for avatar in stats.get("avatarHistory")

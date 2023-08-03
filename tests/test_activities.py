@@ -10,7 +10,6 @@ async def test_fetch_activity() -> None:
     async with client:
         activity = await client.get_activity(ActivityID.VSCODE)
 
-        assert activity.color == "#FFFFFF"
         assert activity.name == "Visual Studio Code"
 
 

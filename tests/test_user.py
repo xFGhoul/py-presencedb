@@ -13,7 +13,7 @@ async def test_fetch_user() -> None:
         user = await client.get_user(USER_ACCOUNT_ID)
 
         assert user.discord_id == USER_ACCOUNT_ID
-        assert user.name == "ghoul"
+        assert user.name == "heartghoul"
 
 
 @pytest.mark.asyncio

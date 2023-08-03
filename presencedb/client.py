@@ -5,6 +5,7 @@ from aiohttp import ClientSession
 
 from .abc import TopActivity, TrendingActivity
 from .activity import Activity
+from .session import Session
 from .enums import ActivityID
 from .user import User
 from .http import Route, HTTP
@@ -48,6 +49,19 @@ class Client:
         await self._http.session.close()
         logger.debug("Session Closed")
 
+    async def get_session(self) -> Session:
+        """
+        Get Current Logged In User's Session
+
+
+        Returns
+        -------
+        Session
+            Class Representing Session
+        """
+        data = await self._http.request(Route("GET", "auth/session"))
+        return Session(data)
+
     async def get_user(self, user_id: int, format: Optional[bool] = False) -> User:
         """Get A User's Profile
 
@@ -72,7 +86,13 @@ class Client:
         stats = await self._http.request(
             Route("GET", "user/{user_id}/stats", user_id=user_id)
         )
-        return User(data, stats, format)
+        trending = await self._http.request(
+            Route("GET", "user/{user_id}/trending-activities", user_id=user_id)
+        )
+        top = await self._http.request(
+            Route("GET", "user/{user_id}/top-activities", user_id=user_id)
+        )
+        return User(data, stats, trending, top, format)
 
     async def get_users(
         self, user_ids: List[int], format: Optional[bool] = False
@@ -104,7 +124,13 @@ class Client:
             stats = await self._http.request(
                 Route("GET", "user/{user_id}/stats", user_id=user_id)
             )
-            users.append(User(data, stats, format))
+            trending = await self._http.request(
+                Route("GET", "user/{user_id}/trending-activities", user_id=user_id)
+            )
+            top = await self._http.request(
+                Route("GET", "user/{user_id}/top-activities", user_id=user_id)
+            )
+            users.append(User(data, stats, trending, top, format))
         return users
 
     async def get_activity(
