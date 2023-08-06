@@ -1,7 +1,6 @@
 {
     "recommendations": [
         "njpwerner.autodocstring",
-        "bungcip.better-toml",
         "seatonjiang.gitmoji-vscode",
         "ms-python.python",
         "ms-python.vscode-pylance",
