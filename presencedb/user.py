@@ -1,7 +1,7 @@
 from msgspec import Struct
 from typing import Dict, List, Tuple
 
-from .abc import PlaytimeDate, TopActivity, TrendingActivity, Avatar
+from .abc import PlaytimeDate, UserTopActivity, UserTrendingActivity, Avatar
 from .utils import (
     HUMANIZE_DAYS,
     HUMNANIZE_HOURS,
@@ -114,7 +114,7 @@ class UserStats:
     ----------
     total_duration: :class:`str`
         Total duration of activity recorded
-    trending_duration: :class:`str`
+    trending_duration: :class:`int`
         Trending Duration of Activities
     top_users: List[TopUser]
         List of Top Users For The Activity
@@ -144,7 +144,7 @@ class UserStats:
             if format
             else stats.get("totalDuration")
         )
-        self.trending_duration: str = (
+        self.trending_duration: int = (
             humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
             if format
             else stats.get("trendingDuration")
@@ -152,12 +152,14 @@ class UserStats:
         self.playtime_dates: List[PlaytimeDate] = [
             PlaytimeDate(date, format) for date in stats.get("playtimeDates")
         ]
-        self.top_activities: List[TopActivity] = [
-            TopActivity(**activity) for activity in top
+        self.top_activities: List[UserTopActivity] = [
+            UserTopActivity(**activity) for activity in top
         ]
-        self.trending_activities: List[TrendingActivity] = [
-            TrendingActivity(**activity) for activity in trending
-        ]
+        self.trending_activities: List[UserTrendingActivity | None] = (
+            [UserTrendingActivity(**activity) for activity in trending]
+            if trending
+            else None
+        )
         self.avatar_history: List[AvatarHistory] = [
             AvatarHistory(avatar, format) for avatar in stats.get("avatarHistory")
         ]

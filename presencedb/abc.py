@@ -1,4 +1,5 @@
 import os
+import msgspec
 
 from yarl import URL
 from msgspec import Struct
@@ -15,7 +16,9 @@ if TYPE_CHECKING:
 __all__: Tuple[str, ...] = (
     "TopUser",
     "TopActivity",
+    "UserTopActivity",
     "TrendingActivity",
+    "UserTrendingActivity",
     "TopActivity",
 )
 
@@ -143,10 +146,47 @@ class TopActivity(Struct):
 
     Attributes
     ----------
+    id: :class:`id`
+        ID relating to PresenceDB Ranking
     name: :class:`str`
         Name of Activity
     dId: :class:`int`
-        ID of Activity
+        Discord ID of Activity
+    icon: :class:`Avatar`
+        Activity Icon
+    color: :class:`str`
+        Color of Activity
+    added :class:`str`
+        Date Activity was Added
+    duration: :class:`int`
+        Duration Activity Was Played For
+    """
+
+    id: int = msgspec.field(name="id")
+    name: str
+    dId: int
+    color: str
+    added: str
+    icon: Avatar
+    duration: int
+
+    def __post_init__(self):
+        self.icon = Avatar._from_activity(self.icon, self.dId)
+
+    def __repr__(self) -> str:
+        return f"<TopActivity name={self.name}>"
+
+
+class UserTopActivity(Struct):
+    """
+    Class Representing A User Top Activity
+
+    Attributes
+    ----------
+    name: :class:`str`
+        Name of Activity
+    dId: :class:`int`
+        Discord ID of Activity
     icon: :class:`Avatar`
         Activity Icon
     duration: :class:`int`
@@ -162,10 +202,47 @@ class TopActivity(Struct):
         self.icon = Avatar._from_activity(self.icon, self.dId)
 
     def __repr__(self) -> str:
-        return f"<TopActivity name={self.name}>"
+        return f"<UserTopActivity name={self.name}>"
 
 
 class TrendingActivity(Struct):
+    """
+    Class Representing A Trending Activity
+
+    Attributes
+    ----------
+    id: :class:`id`
+        ID relating to PresenceDB Ranking
+    name: :class:`str`
+        Name of Activity
+    dId: :class:`int`
+        ID of Activity
+    icon: :class:`str`
+        Activity Icon URL
+    added: :class:`str`
+        Date Activity was Added
+    color: :class:`str`
+        Color of Activity
+    duration: :class:`int`
+        Duration Activity Has Been Played For
+    """
+
+    id: int = msgspec.field(name="id")
+    name: str
+    dId: int
+    added: str
+    color: str
+    icon: Avatar
+    duration: int
+
+    def __post_init__(self):
+        self.icon = Avatar._from_activity(self.icon, self.dId)
+
+    def __repr__(self) -> str:
+        return f"<TrendingActivity name={self.name}>"
+
+
+class UserTrendingActivity(Struct):
     """
     Class Representing A Trending Activity
 
@@ -190,7 +267,7 @@ class TrendingActivity(Struct):
         self.icon = Avatar._from_activity(self.icon, self.dId)
 
     def __repr__(self) -> str:
-        return f"<TrendingActivity name={self.name}>"
+        return f"<UserTrendingActivity name={self.name}>"
 
 
 class PlaytimeDate:

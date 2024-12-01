@@ -5,7 +5,6 @@ from aiohttp import ClientSession
 
 from .abc import TopActivity, TrendingActivity
 from .activity import Activity
-from .session import Session
 from .enums import ActivityID
 from .user import User
 from .http import Route, HTTP
@@ -48,19 +47,6 @@ class Client:
         logger.debug("Closing Session")
         await self._http.session.close()
         logger.debug("Session Closed")
-
-    async def get_session(self) -> Session:
-        """
-        Get Current Logged In User's Session
-
-
-        Returns
-        -------
-        Session
-            Class Representing Session
-        """
-        data = await self._http.request(Route("GET", "auth/session"))
-        return Session(data)
 
     async def get_user(self, user_id: int, format: Optional[bool] = False) -> User:
         """Get A User's Profile

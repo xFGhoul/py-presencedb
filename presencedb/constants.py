@@ -11,7 +11,7 @@ __all__: Tuple[str, ...] = ("API",)
 class API:
     """Class Representing Constants For API"""
 
-    BASE: Final[URL] = URL("https://api.presencedb.com")
+    BASE: Final[URL] = URL("https://api.presencedb.com/v1")
     ICON: Final[URL] = URL("https://s3.vasc.dev/presencedb/app-icons")
     AVATAR: Final[URL] = URL("https://s3.vasc.dev/presencedb/avatars")
     SPOTIFY: Final[URL] = URL("https://www.presencedb.com/spotify.svg")
