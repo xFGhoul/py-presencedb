@@ -436,7 +436,7 @@ wheels = [
 
 [[package]]
 name = "py-presencedb"
-version = "2.0.1"
+version = "2.0.2"
 source = { editable = "." }
 dependencies = [
     { name = "aiofile" },
