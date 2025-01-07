@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2 (2025-06-01)
+
+- 🚑️ Hotfix Client Response Updates
+
 ## 2.0.0 (2023-04-11)
 
 - 🚀 Release 2.0.0 ()

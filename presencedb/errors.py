@@ -42,7 +42,7 @@ class HTTPException(PresenceDBException):
         self.data: Any = data
 
         self.message: Optional[str] = (
-            data.get("error", {}) if isinstance(data, dict) else None
+            data.get("message", {}) if isinstance(data, dict) else None
         )
 
         super().__init__(

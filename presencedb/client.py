@@ -1,6 +1,6 @@
 import logging
 
-from typing import List, Optional, Tuple, Union, Self, Any
+from typing import List, Optional, Tuple, Union, Dict, Self, Any
 from aiohttp import ClientSession
 
 from .abc import TopActivity, TrendingActivity
@@ -24,7 +24,7 @@ class Client:
     """
 
     def __init__(self, session: Optional[ClientSession] = None) -> None:
-        self._http = HTTP(session=session)
+        self._http: HTTP = HTTP(session=session)
 
     async def __aenter__(self) -> Self:
         if self._http.session is None:
@@ -68,17 +68,17 @@ class Client:
         UserNotFound
             If The User Was Not Found
         """
-        data = await self._http.request(Route("GET", "user/{user_id}", user_id=user_id))
-        stats = await self._http.request(
+        data: Dict = await self._http.request(Route("GET", "user/{user_id}", user_id=user_id))
+        stats: Dict = await self._http.request(
             Route("GET", "user/{user_id}/stats", user_id=user_id)
         )
-        trending = await self._http.request(
+        trending: Dict = await self._http.request(
             Route("GET", "user/{user_id}/trending-activities", user_id=user_id)
         )
-        top = await self._http.request(
+        top: Dict = await self._http.request(
             Route("GET", "user/{user_id}/top-activities", user_id=user_id)
         )
-        return User(data, stats, trending, top, format)
+        return User(data.get("data"), stats.get("data"), trending.get("data"), top.get("data"), format)
 
     async def get_users(
         self, user_ids: List[int], format: Optional[bool] = False
@@ -99,24 +99,24 @@ class Client:
 
         Raises
         ------
-        UserNotFound
+        PresenceDBError
             If The Users Were Not Found
         """
-        users = []
+        users: List = []
         for user_id in user_ids:
-            data = await self._http.request(
+            data: Dict = await self._http.request(
                 Route("GET", "user/{user_id}", user_id=user_id)
             )
-            stats = await self._http.request(
+            stats: Dict = await self._http.request(
                 Route("GET", "user/{user_id}/stats", user_id=user_id)
             )
-            trending = await self._http.request(
+            trending: Dict = await self._http.request(
                 Route("GET", "user/{user_id}/trending-activities", user_id=user_id)
             )
-            top = await self._http.request(
+            top: Dict = await self._http.request(
                 Route("GET", "user/{user_id}/top-activities", user_id=user_id)
             )
-            users.append(User(data, stats, trending, top, format))
+            users.append(User(data.get("data"), stats.get("data"), trending.get("data"), top.get("data"), format))
         return users
 
     async def get_activity(
@@ -138,16 +138,16 @@ class Client:
 
         Raises
         ------
-        ActivityNotFound
+        PresenceDBError
             If The Activity Could Not Be Found
         """
-        data = await self._http.request(
+        data: Dict = await self._http.request(
             Route("GET", "activity/{activity_id}", activity_id=activity_id)
         )
-        stats = await self._http.request(
+        stats: Dict = await self._http.request(
             Route("GET", "activity/{activity_id}/stats", activity_id=activity_id)
         )
-        return Activity(data, stats, format)
+        return Activity(data.get("data"), stats.get("data"), format)
 
     async def get_activities(
         self,
@@ -170,18 +170,18 @@ class Client:
 
         Raises
         ------
-        ActivityNotFound
+        PresenceDBError
             If The Activity Could Not Be Found
         """
-        activities = []
+        activities: List = []
         for activity_id in activity_ids:
-            data = await self._http.request(
+            data: Dict = await self._http.request(
                 Route("GET", "activity/{activity_id}", activity_id=activity_id)
             )
-            stats = await self._http.request(
+            stats: Dict = await self._http.request(
                 Route("GET", "activity/{activity_id}/stats", activity_id=activity_id)
             )
-            activities.append(Activity(data, stats, format))
+            activities.append(Activity(data.get("data"), stats.get("data"), format))
         return activities
 
     async def get_top_activities(self) -> List[TopActivity]:
@@ -194,11 +194,11 @@ class Client:
 
         Raises
         ------
-        ActivitiesNotFound
+        PresenceDBError
             Top Activities Could Not Be Fetched
         """
-        data = await self._http.request(Route("GET", "activities/top"))
-        return [TopActivity(**activity) for activity in data]
+        data: Dict = await self._http.request(Route("GET", "activities/top"))
+        return [TopActivity(**activity) for activity in data.get("data")]
 
     async def get_trending_activities(self) -> List[TrendingActivity]:
         """Returns Current Trending Activities
@@ -209,8 +209,8 @@ class Client:
             List Of Trending Activities
         Raises
         ------
-        ActivitiesNotFound
+        PresenceDBError
             Trending Activities Could Not Be Fetched
         """
-        data = await self._http.request(Route("GET", "activities/trending"))
-        return [TrendingActivity(**activity) for activity in data]
+        data: Dict = await self._http.request(Route("GET", "activities/trending"))
+        return [TrendingActivity(**activity) for activity in data.get("data")]
