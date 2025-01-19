@@ -16,17 +16,14 @@ DAYS: Final[str] = "days"
 
 
 async def icon_to_bytes(icon: str) -> io.BytesIO:
-    """Converts Icon URL To Bytes
+    """
+    Converts Icon URL To Bytes
 
-    Parameters
-    ----------
-    icon : :class:`str`
-        Icon URL
+    Args:
+        icon (str): Icon URL
 
-    Returns
-    -------
-    io.BytesIO
-        Bytes Like Object Of Icon
+    Returns:
+        io.BytesIO: Bytes like object of icon
     """
     async with aiohttp.ClientSession() as session:
         async with session.get(icon) as response:
@@ -34,6 +31,16 @@ async def icon_to_bytes(icon: str) -> io.BytesIO:
 
 
 def _handle_duration_type(option: Union[HOURS, DAYS]) -> List[str]:
+    """
+    Handle the suppression of time units based on the duration type.
+    
+    Args:
+        option (Union[HOURS, DAYS]): The duration type to handle. It can be either HOURS or DAYS.
+    
+    Returns:
+        List[str]: A list of time units to suppress based on the given duration type.
+    """
+    
     suppress: List[str]
     if option == HOURS:
         suppress = [
@@ -59,17 +66,12 @@ def _handle_duration_type(option: Union[HOURS, DAYS]) -> List[str]:
 def humanize_duration(number: int, type: Optional[Union[HOURS, DAYS]] = HOURS) -> str:
     """Generates a Human Readable Duration
 
-    Parameters
-    ----------
-    number: :class:`int`
-        Duration To Format
-    type: Optional[Union[HOURS, DAYS]]
-        If The Output Should Be Days or Hours, defaults to HOURS
+    Args:
+        number (int): Duration To Format
+        type (Optional[Union[HOURS, DAYS]]): If The Output Should Be Days or Hours, defaults to HOURS
 
-    Returns
-    -------
-    str
-        Humanized Duration
+    Returns:
+        str: Humanized Duration
     """
     suppress = _handle_duration_type(type)
     duration: str = humanize.precisedelta(
@@ -83,17 +85,12 @@ def humanize_iso_format(date: int, type: Optional[Union[HOURS, DAYS]] = DAYS) ->
     Generatess a Human Readable Duration from ISO Format
 
 
-    Parameters
-    ----------
-    date: :class:`int`
-        Date That Needs To Be Formatted
-    type: :class:`Optional[Union[HOURS, DAYS]]`
-        If The Output Should Be Days or Hours, Defaults to DAYS
+    Args:
+        date (int): Date That Needs To Be Formatted
+        type (Optional[Union[HOURS, DAYS]]): If The Output Should Be Days or Hours, Defaults to DAYS
 
-    Returns
-    -------
-    str
-        Humanized Duration
+    Returns:
+        str: Humanized Duration
     """
     suppress = _handle_duration_type(type)
     date = datetime.datetime.strptime(date, "%Y-%m-%dT%H:%M:%S.%fZ")

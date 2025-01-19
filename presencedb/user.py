@@ -19,36 +19,21 @@ class User:
     """
     Class Interface Containing User Attributes
 
-    Attributes
-    ----------
-    id: :class:`int`
-        PresenceDB Internal User ID
-    discord_id: :class:`int`
-        User Discord ID
-    name: :class:`str`
-        User's Name
-    discriminator: :class:`str`
-        User's Discord Discriminator
-    inactive: :class:`str`
-        Returns a Date of when The User Became Inactive
-    added: :class:`str`
-        Date User's Account Was Added
-    color: :class:`str`
-        Color Of User's Account
-    avatar: :class:`Avatar`
-        User Avatar
-    plus: :class:`bool`
-        If The User Has Subscribed To PresenceDB Plus
-    tracker: :class:`Dict`
-        Information about Current User Activity
-    timestamp: :class:`str`
-        Timestamp of Current Activity
-    current_activities: List[CurrentActivity]
-        List of Current User Activities
-    stats: UserStats
-        Object Representing User Statistics
-    tag: :class:`str`
-        Combination of `self.name` + `self.discriminator`
+    Attributes:
+        id (int): PresenceDB internal user ID.
+        discord_id (int): User Discord ID.
+        name (str): User's name.
+        discriminator (str): User's Discord discriminator.
+        inactive (str): Returns a date of when the user became inactive.
+        added (str): Date user's account was added.
+        color (str): Color of user's account.
+        avatar (Avatar): User avatar.
+        plus (bool): If the user has subscribed to PresenceDB Plus.
+        tracker (Dict): Information about current user activity.
+        timestamp (str): Timestamp of current activity.
+        current_activities (List[CurrentActivity]): List of current user activities.
+        stats (UserStats): Object representing user statistics.
+        tag (str): Combination of self.name + self.discriminator.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -110,22 +95,14 @@ class UserStats:
     """
     Class Interface Representing Stats of a User
 
-    Attributes
-    ----------
-    total_duration: :class:`str`
-        Total duration of activity recorded
-    trending_duration: :class:`int`
-        Trending Duration of Activities
-    top_users: List[TopUser]
-        List of Top Users For The Activity
-    playtime_dates: List[PlaytimeDate]
-        List of Playtime Dates For Activity
-    top_activities: List[TopActivity]
-        List of Top Activities For User
-    trending_activities: List[TrendingActivity]
-        List of Trending Activities For User
-    avatar_history: List[AvatarHistory]
-        List of Avatars Users Recorded
+    Attributes:
+        total_duration (str): Total Duration of Activity Recorded
+        trending_duration (int): Trending Duration of Activities
+        top_users (List[TopUser]): List of Top Users For The Activity
+        playtime_dates (List[PlaytimeDate]): List of Playtime Dates For Activity
+        top_activities (List[TopActivity]): List of Top Activities For User
+        trending_activities (List[TrendingActivity]): List of Trending Activities For User
+        avatar_history (List[AvatarHistory]): List of Avatars Users Recorded
     """
 
     __slots__: Tuple[str, ...] = (
@@ -175,12 +152,9 @@ class CurrentActivity(Struct):
     """
     Class Representing A Current Activity
 
-    Attributes
-    ----------
-    name: :class:`str`
-        Name of Activity
-    id: :class:`int`
-        ID of Activity
+    Attributes:
+        name (str): Name of Activity
+        id (int): ID of Activity
     """
 
     name: str
@@ -191,18 +165,12 @@ class AvatarHistory:
     """
     Class Representing A User's Avatar History
 
-    Attributes
-    ----------
-    id: :class:`int`
-        ID of Avatar
-    discord_id: :class:`int`
-        Discord ID Pertaining to Avatar
-    avatar: :class:`Avatar`
-        Avatar
-    added: :class:`str`
-        Date Avatar Was Added
-    hidden: :class:`bool`
-        Whether Avatar Is Hidden From Site
+    Attributes:
+        id (int): ID of Avatar
+        discord_id (int): Discord ID Pertaining to Avatar
+        avatar (Avatar): Avatar
+        added (str): Date Avatar Was Added
+        hidden (bool): Whether Avatar Is Hidden From Site
     """
 
     __slots__: Tuple[str, ...] = (
@@ -227,16 +195,13 @@ class AvatarHistory:
 
 
 class ActivityRecord(Struct):
-    """Class Representing an Activity Record
+    """
+    Class Representing an Activity Record
 
-    Attributes
-    ----------
-    dId: :class:`str`
-        ID of Activity
-    name: :class:`str`
-        Activity Name
-    icon: :class:`Avatar`
-        Activity Icon
+    Attributes:
+        dId (str): ID of Activity
+        name (str): Activity Name
+        icon (Avatar): Activity Icon
     """
 
     dId: str
@@ -251,20 +216,13 @@ class Record:
     """
     Class Representing A User's Activity History
 
-    Attributes
-    ----------
-    id: :class:`int`
-        Internal ID of Record
-    date: :class:`str`
-        Date This Activity was Played
-    duration: :class:`int`
-        Duration of Activity Played
-    activity_id: :class:`str`
-        ID of Activity Played
-    discord_id: :class:`str`
-        Discord ID of User Playing The Activity
-    activity: :class:`dict`
-        Dict Of Information Referencing the Activity
+    Attributes:
+        id (int): Internal ID of Record
+        date (str): Date This Activity was Played
+        duration (int): Duration of Activity Played
+        activity_id (str): ID of Activity Played
+        discord_id (str): Discord ID of User Playing The Activity
+        activity (dict): Dict Of Information Referencing the Activity
     """
 
     __slots__: Tuple[str, ...] = (

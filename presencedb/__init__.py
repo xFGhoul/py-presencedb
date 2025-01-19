@@ -39,6 +39,6 @@ __all__: Tuple[str, ...] = (
     "humanize_duration",
 )
 
-__version__ = "2.0.0"
+__version__ = "2.0.3"
 __author__ = "Ghoul"
 __license__ = "MIT"

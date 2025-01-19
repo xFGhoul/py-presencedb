@@ -17,10 +17,8 @@ logger = logging.getLogger(__name__)
 class Client:
     """Client Interface For Interacting With PresenceDB API
 
-    Parameters
-    -----------
-    session: Optional[aiohttp.ClientSession]
-        Client Session Used For HTTP Requests
+    Args:
+        session (Optional[aiohttp.ClientSession]): Client session used for HTTP requests.
     """
 
     def __init__(self, session: Optional[ClientSession] = None) -> None:
@@ -37,10 +35,8 @@ class Client:
     async def cleanup(self) -> None:
         """Closes The Current Client Session
 
-        Raises
-        ------
-        RuntimeError
-            If The Session Was Already Closed
+        Raises:
+            RuntimeError: If The Session Was Already Closed
         """
         if self._http.session.closed:
             raise RuntimeError("Client Session Already Closed.")
@@ -51,22 +47,15 @@ class Client:
     async def get_user(self, user_id: int, format: Optional[bool] = False) -> User:
         """Get A User's Profile
 
-        Parameters
-        ----------
-        user_id : :class:`int`
-            Discord ID of User
-        format : Optional[:class:`bool`]
-            If To Format User Data, by default False
+        Args:
+            user_id (int): Discord ID of user
+            format (bool, optional): If to format user data. Defaults to False
 
-        Returns
-        -------
-        User
-            Object Response Of User
+        Returns:
+            User: PresenceDB User
 
-        Raises
-        ------
-        UserNotFound
-            If The User Was Not Found
+        Raises:
+            UserNotFound: If the user was not found
         """
         data: Dict = await self._http.request(
             Route("GET", "user/{user_id}", user_id=user_id)
@@ -93,22 +82,15 @@ class Client:
     ) -> List[User]:
         """Get Multiple User Profiles
 
-        Parameters
-        ----------
-        user_id : List[:class:`int`]
-            Discord ID's of Users
-        format : Optional[:class:`bool`]
-            If To Format User Data, by default False
+        Args:
+            user_ids (List[int]): Discord IDs of users
+            format (bool, optional): If to format user data. Defaults to False
 
-        Returns
-        -------
-        List[User]
-            List of Users
+        Returns:
+            List[User]: List of users.
 
-        Raises
-        ------
-        PresenceDBError
-            If The Users Were Not Found
+        Raises:
+            PresenceDBError: If the users were not found.
         """
         users: List = []
         for user_id in user_ids:
@@ -140,22 +122,15 @@ class Client:
     ) -> Activity:
         """Get An Activity
 
-        Parameters
-        ----------
-        activity_id : Union[:class:`int`, class:`str`, ActivityID]
-            ID of Activity
-        format : Optional[:class:`bool`]
-            If Duration Values Should Be Formatted, by default False
+        Args:
+            activity_id (Union[int, str, ActivityID]): ID of activity
+            format (bool, optional): If duration values should be formatted. Defaults to False
 
-        Returns
-        -------
-        Activity
-            Object Of JSON Response
+        Returns:
+            Activity: PresenceDB Activity
 
-        Raises
-        ------
-        PresenceDBError
-            If The Activity Could Not Be Found
+        Raises:
+            PresenceDBError: If the activity could not be found
         """
         data: Dict = await self._http.request(
             Route("GET", "activity/{activity_id}", activity_id=activity_id)
@@ -172,22 +147,15 @@ class Client:
     ) -> List[Activity]:
         """Get Multiple Activities
 
-        Parameters
-        ----------
-        activity_ids: List[:class:`int`], List[:class:`str`], List[ActivityID]
-            ID of Activities
-        format : Optional[:class:`bool`]
-            If Duration Values Should Be Formatted, by default False
+        Args:
+            activity_ids (List[Union[int, str, ActivityID]]): ID of activities
+            format (bool, optional): If duration values should be formatted. Defaults to False.
 
-        Returns
-        -------
-        List[Activity]
-            List of Found Activities
+        Returns:
+            List[Activity]: List of found activities
 
-        Raises
-        ------
-        PresenceDBError
-            If The Activity Could Not Be Found
+        Raises:
+            PresenceDBError: If the activity could not be found
         """
         activities: List = []
         for activity_id in activity_ids:
@@ -203,15 +171,11 @@ class Client:
     async def get_top_activities(self) -> List[TopActivity]:
         """Returns Top Activities
 
-        Returns
-        -------
-        List[TopActivity]
-            List Of Top Activities
+        Returns:
+            List[TopActivity]: List of Top Activities
 
-        Raises
-        ------
-        PresenceDBError
-            Top Activities Could Not Be Fetched
+        Raises:
+            PresenceDBError: If Top Activities could not be fetched.
         """
         data: Dict = await self._http.request(Route("GET", "activities/top"))
         return [TopActivity(**activity) for activity in data.get("data")]
@@ -219,14 +183,11 @@ class Client:
     async def get_trending_activities(self) -> List[TrendingActivity]:
         """Returns Current Trending Activities
 
-        Returns
-        -------
-        List[TrendingActivity]
-            List Of Trending Activities
-        Raises
-        ------
-        PresenceDBError
-            Trending Activities Could Not Be Fetched
+        Returns:
+            List[TrendingActivity]: List of trending activities
+
+        Raises:
+            PresenceDBError: Trending activities could not be fetched
         """
         data: Dict = await self._http.request(Route("GET", "activities/trending"))
         return [TrendingActivity(**activity) for activity in data.get("data")]

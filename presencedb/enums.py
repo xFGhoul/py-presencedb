@@ -5,7 +5,32 @@ __all__: Tuple[str, ...] = ("ActivityID",)
 
 @final
 class ActivityID:
-    """Class Representing Activity ID's"""
+    """
+    Class Representing Common Activity ID's
+
+    Attributes:
+        SPOTIFY (str): Activity ID for Spotify.
+        YOUTUBE (int): Activity ID for YouTube.
+        VALORANT (int): Activity ID for Valorant.
+        ROBLOX (int): Activity ID for Roblox.
+        VSCODE (int): Activity ID for Visual Studio Code.
+        OSU (int): Activity ID for Osu!.
+        NETFLIX (int): Activity ID for Netflix.
+        LUNAR_CLIENT (int): Activity ID for Lunar Client.
+        MINECRAFT (int): Activity ID for Minecraft.
+        GENSHIN_IMPACT (int): Activity ID for Genshin Impact.
+        TWITCH (int): Activity ID for Twitch.
+        REDDIT (int): Activity ID for Reddit.
+        MEDAL (int): Activity ID for Medal.
+        LEAGUE_OF_LEGENDS (int): Activity ID for League of Legends.
+        CSGO (int): Activity ID for Counter-Strike: Global Offensive.
+        CUSTOM_STATUS (int): Activity ID for Custom Status.
+        GRAND_THEFT_AUTO_V (int): Activity ID for Grand Theft Auto V.
+        CRUNCHYROLL (int): Activity ID for Crunchyroll.
+        CODE (int): Activity ID for Code.
+        YOUTUBE_MUSIC (int): Activity ID for YouTube Music.
+        FORTNITE (str): Activity ID for Fortnite.
+    """
 
     SPOTIFY: Final[str] = "000000000000000000"
     YOUTUBE: Final[int] = 463097721130188830

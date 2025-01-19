@@ -1,0 +1,36 @@
+site_name: py-presencedb Documentation
+theme:
+  name: material
+  palette:
+    primary: teal
+    scheme: slate
+    toggle:
+        icon: material/brightness-7 
+        name: Switch to dark mode
+  features:
+    - search.suggest
+    - search.highlight
+    - navigation.footer
+
+repo_name: xFGhoul/py-presencedb
+repo_url: https://github.com/xFGhoul/py-presencedb
+
+nav:
+  - Home: index.md
+  - client.md
+  - user.md
+  - activity.md
+  - Classes: abc.md
+  - enums.md
+
+plugins:
+  - mkdocstrings
+  - search
+
+extra:
+  generator: false
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/xFGhoul/py-presencedb
+
+copyright: Copyright &copy; 2023 - 2025 Ghoul

@@ -16,24 +16,16 @@ __all__: Tuple[str, ...] = (
 
 class Activity:
     """
-    Class Interface Representing An Activity
+    Class Interface representing an Activity.
 
-    Attributes
-    ----------
-    id: :class:`int`
-        Internal PresenceDB ID of Activity
-    name: :class:`str`
-        Name of Activity
-    discord_id: :class:`int`
-        ID of Activity
-    added: :class:`str`
-        Date Activity Was Added
-    icon: :class:`Avatar`
-        Activity Icon
-    color: :class:`str`
-        Color of Activity
-    stats: ActivityStats
-        Stats of Activity
+    Attributes:
+        id (int): Internal PresenceDB ID of Activity.
+        name (str): Name of activity.
+        discord_id (int): ID of activity.
+        added (str): Date activity was added.
+        icon (Avatar): Activity icon.
+        color (str): Color of activity.
+        stats (ActivityStats): Stats of activity.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -69,18 +61,13 @@ class Activity:
 
 class ActivityStats:
     """
-    Class Representing Stats of an Activity
+    Class Representing Stats of an activity.
 
-    Attributes
-    ----------
-    total_duration: :class:`str`
-        Total duration of activity recorded
-    trending_duration: :class:`str`
-        Trending Duration of Activities
-    top_users: List[TopUser]
-        List of Top Users For The Activity
-    playtime_dates: List[PlaytimeDate]
-        List of Playtime Dates For Activity
+    Attributes:
+        total_duration (str): Total duration of activity recorded.
+        trending_duration (str): Trending duration of activities.
+        top_users (List[TopUser]): List of top users for the activity.
+        playtime_dates (List[PlaytimeDate]): List of playtime dates for activity.
     """
 
     def __init__(self, stats: Dict, format: bool) -> None:

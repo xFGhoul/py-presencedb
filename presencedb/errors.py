@@ -18,12 +18,9 @@ class PresenceDBException(Exception):
 class HTTPException(PresenceDBException):
     """An exception raised when an HTTP Exception occurs from the API.
 
-    Attributes
-    ----------
-    response: :class:`aiohttp.ClientResponse`
-        The response from the API.
-    data: :class:`Any`
-        The data returned from the API.
+    Attributes:
+        response (aiohttp.ClientResponse): The response from the API.
+        data (Any): The data returned from the API.
     """
 
     __slots__: Tuple[str, ...] = (

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.03 (2025-19-01)
+
+- 🐛 (api): Fix Old API URL's
+- 📝 (docs): Switch From `sphinx` to `mkdocs`
+
 ## 2.0.2 (2025-06-01)
 
 - 🚑️ Hotfix Client Response Updates

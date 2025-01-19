@@ -24,15 +24,15 @@ __all__: Tuple[str, ...] = (
 
 
 class Avatar:
-    """Class Representing an Avatar
+    """Avatar class for handling Discord user avatars.
 
-    Attributes
-    ----------
-    id: :class:`str`
-        ID of avatar
-    url: :class:`str`
-        URL of Avatar
+    This class provides functionality to manage and interact with Discord user avatars,
+    including fetching, saving, and accessing avatar metadata.
 
+    Attributes:
+        avatar_id (str): The unique identifier of the avatar.
+        discord_id (str): The Discord ID of the user the avatar belongs to.
+        url (str): The URL where the avatar image can be accessed.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -79,9 +79,7 @@ class Avatar:
     def id(self) -> str:
         """Returns ID of Avatar
 
-        Returns
-        -------
-        str
+        Returns:
             Raw Avatar ID
         """
         return self.avatar_id
@@ -89,10 +87,14 @@ class Avatar:
     async def save(self, path: os.PathLike) -> None:
         """Saves Current Avatar To File
 
-        Parameters
-        ----------
-        path : os.PathLike
-            Path To Save File Too
+        Args:
+            path: Path To Save File Too
+        
+        Returns:
+            None
+        
+        Raises:
+            IOError: If The File Cannot Be Written to Disk
         """
         avatar: BytesIO = await icon_to_bytes(self.url)
         async with async_open(path, "wb") as file:
@@ -101,20 +103,16 @@ class Avatar:
 
 class TopUser:
     """
-    Class Representing A Top User
+    Class representing a top user in PresenceDB.
 
-    Attributes
-    ----------
-    name: :class:`str`
-        Name of User
-    avatar: :class:`Avatar`
-        User Avatar
-    discriminator: :class:`str`
-        User Discriminator
-    dId: :class:`int`
-        Discord ID of User
-    duration: :class:`int`
-        Duration User Has on Activity
+    This class contains information about a user who ranks highly in an activity.
+
+    Attributes:
+        name (str): Name of the user.
+        avatar (Avatar): User's avatar object.
+        discriminator (str): User's Discord discriminator.
+        dId (int): Discord ID of the user.
+        duration (int): Duration the user has spent on the activity.
     """
 
     __slots__: Tuple[str, ...] = (
@@ -142,24 +140,16 @@ class TopUser:
 
 class TopActivity(Struct):
     """
-    Class Representing A Top Activity
+    Class representing a Top Activity on PresenceDB.
 
-    Attributes
-    ----------
-    id: :class:`id`
-        ID relating to PresenceDB Ranking
-    name: :class:`str`
-        Name of Activity
-    dId: :class:`int`
-        Discord ID of Activity
-    icon: :class:`Avatar`
-        Activity Icon
-    color: :class:`str`
-        Color of Activity
-    added :class:`str`
-        Date Activity was Added
-    duration: :class:`int`
-        Duration Activity Was Played For
+    Attributes:
+        id (int): ID relating to PresenceDB.
+        name (str): Name of the activity.
+        dId (int): Discord ID of the activity.
+        icon (Avatar): Activity's icon object.
+        color (str): Color associated with the activity.
+        added (str): Date when the activity was added.
+        duration (int): Total duration the activity was played for.
     """
 
     id: int = msgspec.field(name="id")
@@ -179,18 +169,13 @@ class TopActivity(Struct):
 
 class UserTopActivity(Struct):
     """
-    Class Representing A User Top Activity
+    Class representing a user's Top Activity on Discord.
 
-    Attributes
-    ----------
-    name: :class:`str`
-        Name of Activity
-    dId: :class:`int`
-        Discord ID of Activity
-    icon: :class:`Avatar`
-        Activity Icon
-    duration: :class:`int`
-        Duration Activity Was Played For
+    Attributes:
+        name (str): Name of the activity.
+        dId (int): Discord ID of the activity.
+        icon (Avatar): Activity's icon object.
+        duration (int): Duration the activity was played for.
     """
 
     name: str
@@ -207,24 +192,16 @@ class UserTopActivity(Struct):
 
 class TrendingActivity(Struct):
     """
-    Class Representing A Trending Activity
+    Class representing a Trending Activity on PresenceDB.
 
-    Attributes
-    ----------
-    id: :class:`id`
-        ID relating to PresenceDB Ranking
-    name: :class:`str`
-        Name of Activity
-    dId: :class:`int`
-        ID of Activity
-    icon: :class:`str`
-        Activity Icon URL
-    added: :class:`str`
-        Date Activity was Added
-    color: :class:`str`
-        Color of Activity
-    duration: :class:`int`
-        Duration Activity Has Been Played For
+    Attributes:
+        id (int): ID relating to PresenceDB.
+        name (str): Name of the activity.
+        dId (int): Discord ID of the activity.
+        icon (Avatar): Activity Icon.
+        added (str): Date activity was added.
+        color (str): Color of the activity.
+        duration (int): Duration activity has been played for.
     """
 
     id: int = msgspec.field(name="id")
@@ -244,18 +221,13 @@ class TrendingActivity(Struct):
 
 class UserTrendingActivity(Struct):
     """
-    Class Representing A Trending Activity
+    Class representing a User Trending Activity on PresenceDB.
 
-    Attributes
-    ----------
-    name: :class:`str`
-        Name of Activity
-    dId: :class:`int`
-        ID of Activity
-    icon: :class:`str`
-        Activity Icon URL
-    duration: :class:`int`
-        Duration Activity Has Been Played For
+    Attributes:
+        name (str): Name of the activity.
+        dId (int): Discord ID of the activity.
+        icon (Avatar): Activity Icon.
+        duration (int): Duration activity has been played for.
     """
 
     name: str
@@ -272,14 +244,11 @@ class UserTrendingActivity(Struct):
 
 class PlaytimeDate:
     """
-    Class Representing A Playtime Date
+    Class representing a playtime date record.
 
-    Attributes
-    ----------
-    date: :class:`str`
-        Date Activity Was Played On
-    duration: :class:`int`
-        Duration Activity Was Played For In Seconds
+    Attributes:
+        date (str): Date activity was played on.
+        duration (int): Duration activity was played for.
     """
 
     __slots__: Tuple[str, ...] = (
