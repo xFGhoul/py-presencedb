@@ -1,4 +1,5 @@
 site_name: py-presencedb Documentation
+site_url: https://pages.ghouldev.tech/pypresencedb
 theme:
   name: material
   palette:
