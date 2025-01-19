@@ -1,3 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/abc/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/activity/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/client/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/enums/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
+    <url>
+         <loc>https://pages.ghouldev.tech/pypresencedb/user/</loc>
+         <lastmod>2025-01-19</lastmod>
+    </url>
 </urlset>
