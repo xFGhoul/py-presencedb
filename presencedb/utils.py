@@ -11,8 +11,8 @@ __all__: Tuple[str, ...] = (
     "humanize_duration",
 )
 
-HUMNANIZE_HOURS: Final[str] = "hours"
-HUMANIZE_DAYS: Final[str] = "days"
+HOURS: Final[str] = "hours"
+DAYS: Final[str] = "days"
 
 
 async def icon_to_bytes(icon: str) -> io.BytesIO:
@@ -33,9 +33,9 @@ async def icon_to_bytes(icon: str) -> io.BytesIO:
             return io.BytesIO(await response.read())
 
 
-def _handle_duration_type(option: Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]) -> List[str]:
+def _handle_duration_type(option: Union[HOURS, DAYS]) -> List[str]:
     suppress: List[str]
-    if option == HUMNANIZE_HOURS:
+    if option == HOURS:
         suppress = [
             "seconds",
             "minutes",
@@ -44,7 +44,7 @@ def _handle_duration_type(option: Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]) -> List
             "years",
             "months",
         ]
-    elif option == HUMANIZE_DAYS:
+    elif option == DAYS:
         suppress = [
             "seconds",
             "minutes",
@@ -56,17 +56,15 @@ def _handle_duration_type(option: Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]) -> List
     return suppress
 
 
-def humanize_duration(
-    number: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]] = HUMNANIZE_HOURS
-) -> str:
+def humanize_duration(number: int, type: Optional[Union[HOURS, DAYS]] = HOURS) -> str:
     """Generates a Human Readable Duration
 
     Parameters
     ----------
     number: :class:`int`
         Duration To Format
-    type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]]
-        If The Output Should Be Days or Hours, defaults to HUMNANIZE_HOURS
+    type: Optional[Union[HOURS, DAYS]]
+        If The Output Should Be Days or Hours, defaults to HOURS
 
     Returns
     -------
@@ -80,9 +78,7 @@ def humanize_duration(
     return duration
 
 
-def humanize_iso_format(
-    date: int, type: Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]] = HUMANIZE_DAYS
-) -> str:
+def humanize_iso_format(date: int, type: Optional[Union[HOURS, DAYS]] = DAYS) -> str:
     """
     Generatess a Human Readable Duration from ISO Format
 
@@ -91,8 +87,8 @@ def humanize_iso_format(
     ----------
     date: :class:`int`
         Date That Needs To Be Formatted
-    type: :class:`Optional[Union[HUMNANIZE_HOURS, HUMANIZE_DAYS]]`
-        If The Output Should Be Days or Hours, Defaults to HUMANIZE_DAYS
+    type: :class:`Optional[Union[HOURS, DAYS]]`
+        If The Output Should Be Days or Hours, Defaults to DAYS
 
     Returns
     -------

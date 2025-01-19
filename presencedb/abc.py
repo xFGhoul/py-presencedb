@@ -7,7 +7,7 @@ from aiofile import async_open
 from typing import Tuple, Dict, Self, TYPE_CHECKING
 
 from .enums import ActivityID
-from .utils import icon_to_bytes, humanize_iso_format, humanize_duration, HUMANIZE_DAYS
+from .utils import icon_to_bytes, humanize_iso_format, humanize_duration, DAYS
 from .constants import API
 
 if TYPE_CHECKING:
@@ -131,7 +131,7 @@ class TopUser:
         self.avatar: Avatar = Avatar._from_user(data.get("avatar"), self.discord_id)
         self.discriminator: str = data.get("discriminator")
         self.duration: int = (
-            humanize_duration(data.get("duration"), HUMANIZE_DAYS)
+            humanize_duration(data.get("duration"), DAYS)
             if format
             else data.get("duration")
         )
@@ -292,7 +292,7 @@ class PlaytimeDate:
             humanize_iso_format(data.get("date")) if format else data.get("date")
         )
         self.duration: int = (
-            humanize_duration(data.get("duration"), HUMANIZE_DAYS)
+            humanize_duration(data.get("duration"), DAYS)
             if format
             else data.get("duration")
         )

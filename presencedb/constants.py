@@ -12,8 +12,8 @@ class API:
     """Class Representing Constants For API"""
 
     BASE: Final[URL] = URL("https://presencedb.com/api")
-    ICON: Final[URL] = URL("https://s3.vasc.dev/presencedb/app-icons")
-    AVATAR: Final[URL] = URL("https://s3.vasc.dev/presencedb/avatars")
+    ICON: Final[URL] = URL("https://r2.presencedb.com/app-icons")
+    AVATAR: Final[URL] = URL("https://r2.presencedb.com/avatars")
     SPOTIFY: Final[URL] = URL("https://www.presencedb.com/spotify.svg")
     VERSION: Final[str] = "2.0.0"
     HEADERS: Final[Dict[str, str]] = {

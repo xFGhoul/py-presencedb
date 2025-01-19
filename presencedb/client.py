@@ -68,7 +68,9 @@ class Client:
         UserNotFound
             If The User Was Not Found
         """
-        data: Dict = await self._http.request(Route("GET", "user/{user_id}", user_id=user_id))
+        data: Dict = await self._http.request(
+            Route("GET", "user/{user_id}", user_id=user_id)
+        )
         stats: Dict = await self._http.request(
             Route("GET", "user/{user_id}/stats", user_id=user_id)
         )
@@ -78,7 +80,13 @@ class Client:
         top: Dict = await self._http.request(
             Route("GET", "user/{user_id}/top-activities", user_id=user_id)
         )
-        return User(data.get("data"), stats.get("data"), trending.get("data"), top.get("data"), format)
+        return User(
+            data.get("data"),
+            stats.get("data"),
+            trending.get("data"),
+            top.get("data"),
+            format,
+        )
 
     async def get_users(
         self, user_ids: List[int], format: Optional[bool] = False
@@ -116,7 +124,15 @@ class Client:
             top: Dict = await self._http.request(
                 Route("GET", "user/{user_id}/top-activities", user_id=user_id)
             )
-            users.append(User(data.get("data"), stats.get("data"), trending.get("data"), top.get("data"), format))
+            users.append(
+                User(
+                    data.get("data"),
+                    stats.get("data"),
+                    trending.get("data"),
+                    top.get("data"),
+                    format,
+                )
+            )
         return users
 
     async def get_activity(

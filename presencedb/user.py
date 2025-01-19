@@ -3,8 +3,8 @@ from typing import Dict, List, Tuple
 
 from .abc import PlaytimeDate, UserTopActivity, UserTrendingActivity, Avatar
 from .utils import (
-    HUMANIZE_DAYS,
-    HUMNANIZE_HOURS,
+    DAYS,
+    HOURS,
     humanize_duration,
     humanize_iso_format,
 )
@@ -140,12 +140,12 @@ class UserStats:
 
     def __init__(self, stats: Dict, trending: Dict, top: Dict, format: bool) -> None:
         self.total_duration: str = (
-            humanize_duration(stats.get("totalDuration"), HUMANIZE_DAYS)
+            humanize_duration(stats.get("totalDuration"), DAYS)
             if format
             else stats.get("totalDuration")
         )
         self.trending_duration: int = (
-            humanize_duration(stats.get("trendingDuration"), HUMNANIZE_HOURS)
+            humanize_duration(stats.get("trendingDuration"), HOURS)
             if format
             else stats.get("trendingDuration")
         )
